@@ -9,7 +9,7 @@ define("CONTROLLERS", APP . DIRECTORY_SEPARATOR . "controllers");
 define("MODELS", APP . DIRECTORY_SEPARATOR . "models");
 define("VIEWS", APP . DIRECTORY_SEPARATOR . "views");
 define("DOMAIN", "localhost");
-define("ROOT_LINK", "http://localhost/pages/eStore/public/back/");
+define("ROOT_LINK", "http://localhost/pages/eStore/public/");
 
 // front files paths
 define("PUBLIC_DIR", ROOT . DIRECTORY_SEPARATOR . "public");
