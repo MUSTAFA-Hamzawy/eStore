@@ -19,7 +19,11 @@ class user extends controller
         $this->userModel = new userModel();
     }
 
-    /***********  Private Methods  ***************/
+    public function defaultMethod()
+    {
+        helpers::reDirect("user/login");
+    }
+
     private function sanitizeString(&$str)
     {
         $str = filter_var($str,FILTER_SANITIZE_STRING);
@@ -96,32 +100,6 @@ class user extends controller
             $this->addError("Two Passwords are not matching");
     }
 
-    private function addError($error){
-        $this->errors[] = $error;
-    }
-
-    private function addUser(){
-
-        $data = [
-            "name" => $_POST['name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password']
-        ];
-        $this->userModel->addUser($data);
-
-        session::set("name", $_POST['name']);
-        session::set("email", $_POST['email']);
-
-        helpers::reDirect("../admin");
-    }
-
-    /***********  Public Methods  ***************/
-
-    public function defaultMethod()
-    {
-        helpers::reDirect("user/login");
-    }
-
     public function register(){
 
         if (!empty($_SESSION))
@@ -190,11 +168,34 @@ class user extends controller
         helpers::reDirect("../user/login");
     }
 
+    private function addUser(){
+
+        $data = [
+            "name" => $_POST['name'],
+            "email" => $_POST['email'],
+            "password" => $_POST['password']
+        ];
+        $this->userModel->addUser($data);
+
+        session::set("name", $_POST['name']);
+        session::set("email", $_POST['email']);
+
+        helpers::reDirect("../admin");
+    }
+
+    private function addError($error){
+        $this->errors[] = $error;
+    }
+
     public function getErrors(){
         return $this->errors;
     }
 
     public function clearErrors(){
         unset($this->errors);
+    }
+
+    public function showUsersInfo(){
+        $this->view("dashboard/usersInfo");
     }
 }
