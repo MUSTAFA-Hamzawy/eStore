@@ -1,5 +1,5 @@
-<?php require_once "header.php"?>
-<?php require "sidebar.php"?>
+<?php require_once "header.php" ?>
+<?php require_once "sidebar.php" ?>
 
 
     <!-- Content Wrapper. Contains page content -->
@@ -9,7 +9,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Blank Page</h1>
+                        <h1>Blank asdas Page</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -51,4 +51,4 @@
     <!-- /.content-wrapper -->
 
 
-<?php require_once "footer.php"?>
+<?php require_once "footer.php" ?>
