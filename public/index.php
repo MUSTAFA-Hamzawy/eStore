@@ -16,7 +16,9 @@ define("PUBLIC_DIR", ROOT . DIRECTORY_SEPARATOR . "public");
 define("FRONT_ASSETS", "http://localhost/pages/eStore/public/front/");
 define("BACK_ASSETS", "http://localhost/pages/eStore/public/back/");
 
-
+// some needed files
+define("HEADER", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "header.php");
+define("SIDEBAR", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "sidebar.php");
 
 // database info
 define("DATABASE_NAME", 'store');
