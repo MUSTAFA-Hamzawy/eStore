@@ -1117,7 +1117,7 @@ Responsive.display = {
 
 	childRowImmediate: function ( row, update, render ) {
 		if ( (! update && row.child.isShown()) || ! row.responsive.hasHidden() ) {
-			// User interaction and the row is show, or nothing to show
+			// user interaction and the row is show, or nothing to show
 			row.child( false );
 			$( row.node() ).removeClass( 'parent' );
 

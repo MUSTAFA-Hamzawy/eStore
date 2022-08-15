@@ -59,7 +59,7 @@ var KeyTable = function ( dt, opts ) {
 		throw 'KeyTable requires DataTables 1.10.8 or newer';
 	}
 
-	// User and defaults configuration object
+	// user and defaults configuration object
 	this.c = $.extend( true, {},
 		DataTable.defaults.keyTable,
 		KeyTable.defaults,
