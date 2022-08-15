@@ -6,22 +6,22 @@ use Dcblogdev\PdoWrapper\Database;
 
 class model
 {
-    protected $connect;
+    protected $db;
 
     public function __construct()
     {
         $options = [
             //required
-            'username' => 'root',
-            'database' => 'news_website',
+            'username' => USER_NAME,
+            'database' => DATABASE_NAME,
             //optional
-            'password' => '',
+            'password' => PASSWORD,
             'type' => 'mysql',
             'charset' => 'utf8',
-            'host' => 'localhost',
-            'port' => '3306'
+            'host' => HOST_NAME,
+            'port' => PORT
         ];
 
-        $this->connect = new Database($options);
+        $this->db = new Database($options);
     }
 }
