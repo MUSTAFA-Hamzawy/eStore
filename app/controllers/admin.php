@@ -11,14 +11,17 @@ class admin extends controller
 
     public function __construct()
     {
+        parent::__construct();
+        $this->viewFolderName = 'admin';
         session::start();
     }
-    public function defaultMethod()
+
+    public function main()
     {
         if (empty($_SESSION))
             helpers::reDirect("user");
 
-        $this->view("dashboard/index");
+        $this->view();
     }
 
 
