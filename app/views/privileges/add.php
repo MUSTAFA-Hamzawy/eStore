@@ -27,7 +27,9 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                <a class="btn btn-info" href="<?= ROOT_LINK . 'privileges'?>">
+                    <i class="fas fa-home"></i>
+                </a>
             </div>
             <!-- /.card-header -->
               <form autocomplete="off" method="POST">
