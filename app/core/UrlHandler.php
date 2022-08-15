@@ -11,7 +11,7 @@ class UrlHandler
     private $parameters;
 
     public function __construct(){
-        $this->method = "defaultMethod";
+        $this->method = "main";
         $this->analyzeUrl();
         $this->render();
     }
@@ -32,7 +32,7 @@ class UrlHandler
 
         }else{
             $this->controller = "home";
-            $this->method = "defaultMethod";
+            $this->method = "main";
         }
     }
 
@@ -46,10 +46,10 @@ class UrlHandler
             $this->controller = "home";
         }
 
-        $controllerInstance = new $controllerClass();
+        $controllerInstance = new $controllerClass;
 
         if (! method_exists($controllerInstance, $this->method))
-            $this->method = "defaultMethod";
+            $this->method = "main";
 
         $controllerInstance->setValues($this->controller, $this->method, $this->parameters);
         $controllerInstance->{$this->method}();     // call the method
