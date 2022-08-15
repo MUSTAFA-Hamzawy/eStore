@@ -45,7 +45,9 @@
                         foreach ($this->data as $privilege):
                 ?>
                 <tr>
-                  <td><?= $privilege->privillege ?></td>
+                  <td><?= $privilege->privillege ?>
+                  </td>
+
                   <td>
                         <a class="btn btn-info" href="<?= ROOT_LINK .
                         "privileges/edit/" . $privilege->id?>">
