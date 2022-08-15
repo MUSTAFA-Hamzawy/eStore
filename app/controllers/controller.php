@@ -4,11 +4,24 @@
 namespace MVC\controllers;
 
 
+use MVC\core\session;
+use MVC\core\validation;
+
 abstract class controller
 {
+  use validation;
     protected $controller;
     protected $method;
     protected $parameters;
+    protected $viewFolderName;
+    protected $massegesToUser;
+    protected $model;
+    protected $pageTitle;
+
+    public function __construct()
+    {
+      session::start();
+    }
 
     public function setValues($controller, $method, $parameters)
     {
@@ -17,10 +30,17 @@ abstract class controller
         $this->parameters = $parameters;
     }
 
-    protected function view($path){
-        $viewFile = VIEWS . DIRECTORY_SEPARATOR . $path . ".php";
+    protected function view(){
+        $viewFile = VIEWS . DIRECTORY_SEPARATOR . $this->viewFolderName . DIRECTORY_SEPARATOR . $this->method . ".php";
         require_once ($viewFile);
     }
 
-    abstract public function defaultMethod();
+    protected function addMessageToUser($key, $value){
+      $this->massegesToUser[$key] = array();
+      array_push($this->massegesToUser[$key], $value);
+    }
+
+    abstract public function main();
+
+
 }
