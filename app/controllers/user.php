@@ -4,108 +4,29 @@
 namespace MVC\controllers;
 use MVC\core\helpers;
 use MVC\core\session;
+use MVC\core\validation;
 use MVC\models\model;
 use MVC\models\user as userModel;
-use function Sodium\add;
 
 
 class user extends controller
 {
-    private $errors;
-    private $userModel;
-
     public function __construct(){
-        session::start();
-        $this->userModel = new userModel();
+      parent::__construct();
+      $this->viewFolderName = 'user';
+      $this->model = new userModel();
     }
 
-    public function defaultMethod()
+    public function main()
     {
         helpers::reDirect("user/login");
     }
 
-    private function sanitizeString(&$str)
-    {
-        $str = filter_var($str,FILTER_SANITIZE_STRING);
-    }
-
-    private function validateEmail(&$email)
-    {
-        if (empty($email))
-        {
-            $this->addError("Email Field can't be empty.");
-            return;
-        }
-
-        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
-        $email = filter_var(trim($email), FILTER_VALIDATE_EMAIL);
-
-        if ($email === false)
-        {
-            $this->addError("Invalid Email");
-            return;
-        }
-    }
-
-    private function validateName(&$str)
-    {
-        if (empty($str))
-        {
-            $this->addError("Name Field is required");
-            return;
-        }
-        $this->sanitizeString($str);
-    }
-
-    private function checkPasswordPower(&$str){
-        if (strlen($str) < 8)
-        {
-            $this->addError("Write more powerful password");
-            return;
-        }
-        if (! preg_match("/[a-z]/i", $str) || ! preg_match("/[0-9]/", $str))
-        {
-            {
-                $this->addError("Password must be mix of characters and numbers");
-                return;
-            }
-        }
-        if (! preg_match("/[A-Z]/", $str))
-        {
-            {
-                $this->addError("Password must have at least one Capital character");
-                return;
-            }
-        }
-    }
-
-    private function validatePassword(&$str)
-    {
-        if (empty($str))
-        {
-            $this->addError("Password Field is required");
-            return;
-        }
-
-        $this->sanitizeString($str);
-
-        $this->checkPasswordPower($str);
-    }
-
-    private function checkSamePassword($pass, $rePass){
-
-        $this->sanitizeString($rePass);
-
-        if ($pass !== $rePass)
-            $this->addError("Two Passwords are not matching");
-    }
-
     public function register(){
-
         if (!empty($_SESSION))
             helpers::reDirect("../admin");
 
-        $this->view("dashboard/register", $this->errors);
+        $this->view("MainFiles/register", $this->errors);
     }
 
     public function registerValidation(){
@@ -120,7 +41,7 @@ class user extends controller
         $this->checkSamePassword($_POST['password'], $_POST['rePassword']);
 
         if (! empty($this->errors))
-            $this->view("dashboard/register", $this->errors);
+            $this->view("MainFiles/register", $this->errors);
         else{
             $this->addUser();
         }
@@ -130,7 +51,7 @@ class user extends controller
         if (!empty($_SESSION))
             helpers::reDirect("../admin");
 
-        $this->view("dashboard/login", $this->errors);
+        $this->view("MainFiles\login");
     }
 
     public function validateLogin(){
@@ -147,7 +68,7 @@ class user extends controller
         if (empty($password))
             $this->addError("Password is required.");
         if (!empty($this->errors))
-            $this->view("dashboard/login", $this->errors);
+            $this->view("MainFiles/login", $this->errors);
 
         $loginCondition = $this->userModel->checkUserExist($email, $password);
 
@@ -159,7 +80,7 @@ class user extends controller
             helpers::reDirect("../admin");
         }else{
             $this->addError("Failed!, Wrong email or password.");
-            $this->view("dashboard/login", $this->errors);
+            $this->view("MainFiles/login", $this->errors);
         }
     }
 
@@ -169,7 +90,6 @@ class user extends controller
     }
 
     private function addUser(){
-
         $data = [
             "name" => $_POST['name'],
             "email" => $_POST['email'],
@@ -183,9 +103,7 @@ class user extends controller
         helpers::reDirect("../admin");
     }
 
-    private function addError($error){
-        $this->errors[] = $error;
-    }
+
 
     public function getErrors(){
         return $this->errors;
@@ -196,6 +114,9 @@ class user extends controller
     }
 
     public function showUsersInfo(){
-        $this->view("dashboard/usersInfo");
+        $this->view();
     }
+
+
+
 }

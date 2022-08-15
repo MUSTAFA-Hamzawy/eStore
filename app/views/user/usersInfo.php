@@ -1,5 +1,5 @@
-<?php require "header.php"?>
-<?php require "sidebar.php"?>
+<?php require_once "header.php" ?>
+<?php require_once "sidebar.php" // todo-me make add button ?>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -27,18 +27,21 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                                <a class="btn btn-success" href="<?= ROOT_LINK . "privileges/add"?>">
+                                    Add <i class="fas fa-plus-circle"></i>
+                                </a>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
-                                        <th>CSS grade</th>
+                                        <th>Name</th>
+                                        <th>Group</th>
+                                        <th>E-mail</th>
+                                        <th>Joining Date</th>
+                                        <th>Last Login</th>
+                                        <th>Controls</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -50,6 +53,16 @@
                                         <td>Win 95+</td>
                                         <td> 4</td>
                                         <td>X</td>
+                                        <td>
+                                            <a class="btn btn-info" href="<?= ROOT_LINK .
+                                            "privileges/edit"?>">
+                                                Edit  <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger" href="<?= ROOT_LINK .
+                                            "privileges/delete"?>">
+                                                Delete  <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
 
                                     </tbody>
