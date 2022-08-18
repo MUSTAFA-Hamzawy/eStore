@@ -60,7 +60,7 @@
                   <td><?= $group->name ?>
                   </td>
 
-                  <td>
+                  <td style="text-align: center">
                         <a class="btn btn-info" href="<?= ROOT_LINK .
                         "userGroups/edit/" . $group->id?>">
                             Edit  <i class="fas fa-edit"></i>

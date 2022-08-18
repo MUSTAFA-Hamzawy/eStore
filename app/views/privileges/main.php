@@ -32,12 +32,25 @@
                 </a>
             </div>
             <!-- /.card-header -->
+
+            <?php if(isset($this->massegesToUser['error'])):?>
+                <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
+            <?php endif; ?>
+
+            <?php if(isset($this->massegesToUser['success'])):?>
+                <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
+            <?php endif; ?>
+
+            <?php if(isset($this->massegesToUser['warning'])):?>
+                <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
+            <?php endif; ?>
+
             <div class="card-body">
-              <table id="example2" class="table table-bordered table-hover">
+              <table id="dataTable" class="table table-bordered table-hover">
                 <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Controls</th>
+                  <th style="width:20%">Controls</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,14 +61,13 @@
                   <td><?= $privilege->privillege ?>
                   </td>
 
-                  <td>
+                  <td style="text-align: center">
                         <a class="btn btn-info" href="<?= ROOT_LINK .
                         "privileges/edit/" . $privilege->id?>">
                             Edit  <i class="fas fa-edit"></i>
                         </a>
-                        <a class="btn btn-danger"
-                           href="<?= ROOT_LINK . "privileges/delete/" . $privilege->id?>"
-                           onclick="javascript:confirmationDelete($(this));return false;" >
+                        <a class="btn btn-danger" data-toggle="modal" data-target="#modal-warning"
+                           href="<?= ROOT_LINK . "privileges/delete/" . $privilege->id?>" >
                             Delete
                             <i class="fas fa-trash"></i>
                             </a>
@@ -85,6 +97,32 @@
 </div>
 <!-- ./wrapper -->
 
+<!-- delete Confirmation -->
+<div class="modal fade" id="modal-warning">
+    <div class="modal-dialog">
+        <div class="modal-content bg-warning">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmation !</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Confirm that you want to delete this privilege.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-outline-light confirm-agree"
+                        onclick="javascript:confirmationDelete($(this));return false;"
+                        href='<?php if(isset($this->data))
+                          echo ROOT_LINK . "privileges/delete/{$privilege->id}"?>'>Yes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <!-- jQuery -->
 <script src="<?= BACK_ASSETS?>plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -109,7 +147,7 @@
 <!-- Page specific script -->
 <script>
     $(function () {
-        $('#example2').DataTable({
+        $('#dataTable').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": false,
@@ -120,14 +158,14 @@
         });
     });
 </script>
-<!--Confirm Delete -->
+<!--Confirm Delete-->
 <script>
     function confirmationDelete(anchor)
     {
-        var conf = confirm('Are you sure want to delete this record?');
-        if(conf)
-            window.location=anchor.attr("href");
+        window.location=anchor.attr("href");
     }
 </script>
+<!-- Page specific script -->
+<?php require_once USER_MESSAGES?>
 </body>
 </html>

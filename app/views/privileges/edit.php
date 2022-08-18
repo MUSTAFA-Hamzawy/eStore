@@ -3,22 +3,22 @@
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-            <h1><?= $this->pageTitle ?></h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">,؟</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><?= $this->pageTitle ?></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="<?= ROOT_LINK . $this->controller?>">Home</a></li>
+                        <li class="breadcrumb-item active"><?= $this->pageTitle ?></li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
   <!-- Main content -->
   <section class="content">
@@ -32,21 +32,34 @@
                 </a>
             </div>
             <!-- /.card-header -->
-              <form autocomplete="off" method="POST">
+
+            <?php if(isset($this->massegesToUser['error'])):?>
+                <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
+            <?php endif; ?>
+
+            <?php if(isset($this->massegesToUser['success'])):?>
+                <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
+            <?php endif; ?>
+
+            <?php if(isset($this->massegesToUser['warning'])):?>
+                <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
+            <?php endif; ?>
+
+              <form autocomplete="off" method="POST" class="needs-validation" novalidate>
                   <div class="card-body">
                       <div class="form-group">
                           <label for="privilege">Privilege</label>
                           <input type="text" class="form-control" id="privilege"
-                                 placeholder="Ex: Add a new supplier" name="privilege"
+                                 name="privilege"
                                  value="<?php if (isset($this->data->privillege)) echo $this->data->privillege?>"
-                          >
+                                 required>
                       </div>
                       <div class="form-group">
                           <label for="link">Link</label>
                           <input type="text" class="form-control"
-                                 placeholder="Ex: suppliers/create" id="link" name="link"
+                                 id="link" name="link"
                                  value="<?php if (isset($this->data->url_title)) echo $this->data->url_title?>"
-                          >
+                                 required>
                       </div>
                   </div>
                   <!-- /.card-body -->
@@ -97,18 +110,17 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= BACK_ASSETS?>dist/js/demo.js"></script>
 <!-- Page specific script -->
+<?php require_once USER_MESSAGES?>
+<!--Prevent resubmission  -->
+<?php require_once RESUBMISSION_PREVENT?>
+<!--Form Validation -->
+<?php require_once FORM_VALIDATION?>
+<!--Confirm Delete-->
 <script>
-    $(function () {
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
+    function confirmationDelete(anchor)
+    {
+        window.location=anchor.attr("href");
+    }
 </script>
 </body>
 </html>
