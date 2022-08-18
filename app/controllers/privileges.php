@@ -24,6 +24,7 @@ class privileges extends controller
 
     $this->pageTitle = 'Privileges';
     $this->method = "main";
+    $this->data = $this->model->fetchModelRecords();
     $this->view();
   }
 
@@ -44,8 +45,19 @@ class privileges extends controller
     $this->view();
   }
 
-  private function fetchPrivilegeById(){
+  // To avoid if anyone from playing in the URL
+  private function checkIdValidity(){
+    if (!isset($this->parameters[0]))
+      $this->redirectToHomePage();
+
     $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
+
+    if (empty($this->model->id))
+      $this->redirectToHomePage();
+  }
+
+  private function fetchPrivilegeById(){
+    $this->checkIdValidity();
     $this->data = $this->model->fetchRecord();
     if (! $this->data)
       $this->redirectToHomePage();
@@ -60,30 +72,27 @@ class privileges extends controller
         $this->addMessageToUser('success', "Privilege is Updated successfully.");
       else
         $this->addMessageToUser('errors', "Failed to update this privilege.");
-
-      $this->redirectToHomePage();
-
     }
   }
 
   public function edit(){
 
     $this->fetchPrivilegeById();
-
     $this->editPrivilege();
 
     $this->pageTitle = "Edit Privilege";
     $this->view();
   }
 
-  public function delete(){
-    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
+  public function delete(){   //todo: problem: last inserted item is the one which deleted
+    $this->checkIdValidity();
 
-    if($this->model->delete())
+    if($this->model->deleteByPK())
       $this->addMessageToUser('success', "Privilege is Removed successfully.");
     else
       $this->addMessageToUser('errors', "Failed to remove this privilege.");
 
-    $this->redirectToHomePage();
+    $this->main();
   }
+
 }
