@@ -9,7 +9,6 @@ use MVC\models\privileges as privilegeModel;
 
 class privileges extends controller
 {
-  public $data;
   public function __construct(){
     parent::__construct();
 
@@ -18,12 +17,13 @@ class privileges extends controller
     $this->data = $this->model->fetchRecords();
   }
 
-  public function main()
+  public function main()    // default method
   {
     if (empty($_SESSION))   // todo-me : another way to check that the person is logged in
-      helpers::reDirect("../admin");  // todo-me: think of good way to get the path not written manually
+      helpers::reDirect("admin");  // todo-me: think of good way to get the path not written manually
 
     $this->pageTitle = 'Privileges';
+    $this->method = "main";
     $this->view();
   }
 
@@ -44,14 +44,14 @@ class privileges extends controller
     $this->view();
   }
 
-  public function edit(){
-
-    $this->pageTitle = "Edit Privilege";
-    $this->model->id = $this->parameters[0];    // todo-me : sanitize the parameters first
+  private function fetchPrivilegeById(){
+    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
     $this->data = $this->model->fetchRecord();
+    if (! $this->data)
+      $this->redirectToHomePage();
+  }
 
-    $this->view();
-
+  private function editPrivilege(){
     if (isset($_POST['submit'])) {
 
       $this->model->Name = $this->sanitizeString($_POST['privilege']);
@@ -61,19 +61,29 @@ class privileges extends controller
       else
         $this->addMessageToUser('errors', "Failed to update this privilege.");
 
-      helpers::reDirect("../test");     // todo-me : redirect after editing to the home page and show the msgs
-    }
+      $this->redirectToHomePage();
 
+    }
+  }
+
+  public function edit(){
+
+    $this->fetchPrivilegeById();
+
+    $this->editPrivilege();
+
+    $this->pageTitle = "Edit Privilege";
+    $this->view();
   }
 
   public function delete(){
-    $this->model->id = $this->parameters[0]; // todo-me : sanitize the parameters first
+    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
 
     if($this->model->delete())
       $this->addMessageToUser('success', "Privilege is Removed successfully.");
     else
       $this->addMessageToUser('errors', "Failed to remove this privilege.");
 
-    helpers::reDirect("../");// todo-me : redirect after deleting to the home page and show the msgs
+    $this->redirectToHomePage();
   }
 }

@@ -18,7 +18,7 @@ class privileges extends model
     parent::__construct();
   }
 
-  public function fetchRecords(){
+  public function fetchRecords(){   //todo-me : common functions in the abstract model + think of static functions
     $name = self::tableName;
     return $this->db->rows("SELECT * FROM " . self::tableName);
   }
@@ -36,7 +36,7 @@ class privileges extends model
   public function add(){
     $data = array_combine($this->tableSchema, [$this->Name, $this->url_title]);
     $check = $this->db->insert(self::tableName, $data);
-    return $check > 0 ;    // returned value is the last inserted id so it it is not 0, then successfully inserted
+    return $check;    // returned value is the last inserted id
   }
 
   public function edit(){
