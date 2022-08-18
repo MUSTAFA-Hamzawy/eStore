@@ -1,6 +1,5 @@
 <?php
 
-
 namespace MVC\controllers;
 
 
@@ -21,14 +20,15 @@ class userGroups extends controller
     $this->viewFolderName = "UserGroups";
     $this->model = new group();
     $this->privilegeModel = new privilegesModel();
+    $this->groupPrivilegesModel = new groupPrivileges();
   }
 
   public function main()
   {
-    if (empty($_SESSION))
+    if (empty($_SESSION))     //todo-me : think of another way
       helpers::reDirect("admin");
 
-    $this->data['groups'] = $this->model->fetchRecords();
+    $this->data['groups'] = $this->model->fetchModelRecords();
     $this->pageTitle = 'Groups';
     $this->method = "main";
     $this->view();
@@ -49,21 +49,16 @@ class userGroups extends controller
    */
   private function checkboxesValidation(){
     $size = count($_POST['privileges']);
-    $statusFlag = true;
     for ($i = 0; $i < $size; $i++)
     {
       $_POST['privileges'][$i] = filter_var($_POST['privileges'][$i], FILTER_SANITIZE_NUMBER_INT);
       if (empty($_POST['privileges'][$i]))
-      {
-        array_splice($_POST['privileges'], $i, 1);
-        $i--;
-        $size--;
-        $statusFlag = false;
-      }
+        return false;
     }
-    return $statusFlag;
+    return true;
 }
 
+  //TO add privileges that selected by the user
   private function addPrivileges($privilegesIds){
     $this->groupPrivilegesModel->groupId = $this->groupId;
     $statusFlag = true;
@@ -75,42 +70,41 @@ class userGroups extends controller
     return $statusFlag;
   }
 
-  private function arePrivilegesAddedSuccessfully(){
-    $firstCondition  = $this->checkBoxesValidation();
-    $secondCondition = $this->addPrivileges($_POST['privileges']);
-
-    return $firstCondition && $secondCondition;
-}
-
   public function add(){
 
     if (isset($_POST['submit'])) {
 
-    $this->groupId = $this->addGroup();
+      // preparing needed info for view page
+      $this->pageTitle = "Add Group";
+      $this->data['privileges'] = $this->privilegeModel->fetchModelRecords();
 
+      // Inserting both the group and its privileges to db
       if (isset($_POST['privileges']))
       {
-        $this->groupPrivilegesModel = new groupPrivileges();
-
-        if (! $this->arePrivilegesAddedSuccessfully())
-        {
-          $this->addMessageToUser("warning", "Failed to add some privileges, you are redirected to edit this group.");
-          // view edit page to let the user edit the privileges that have not been added
-          $this->parameters[0] = $this->groupId;
+        // Inserting the validity of the checkboxes
+        if (! $this->checkBoxesValidation()){
+          $this->addMessageToUser("error", "Failed! something wrong with privileges, try again.");
           $this->view();
           return;
         }
-      }
 
-      $this->addMessageToUser('success', "Group has been added successfully.");
+        // Inserting the group name
+        $this->groupId = $this->addGroup();
+        $this->addMessageToUser('success', "Group has been added successfully.");
+
+        // Inserting the privileges
+        if (! $this->addPrivileges($_POST['privileges']))
+          $this->addMessageToUser("warning", "Failed to add some privileges, you may need to edit this group.");
+      }
+      $this->view();
     }
 
     $this->pageTitle = "Add Group";
-    $this->data['privileges'] = $this->privilegeModel->fetchRecords();
+    $this->data['privileges'] = $this->privilegeModel->fetchModelRecords();
     $this->view();
-    unset($this->massegesToUser);
   }
 
+  // To avoid if anyone from playing in the URL
   private function checkIdValidity(){
     if (!isset($this->parameters[0]))
       $this->redirectToHomePage();
@@ -122,18 +116,14 @@ class userGroups extends controller
   }
 
   private function fetchGroupData(){
-
     $this->checkIdValidity();
-    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
     $this->data['currentGroup'] = $this->model->fetchRecord();
     if (! $this->data['currentGroup'])
       $this->redirectToHomePage();
   }
 
-  private function fetchOldPrivileges(){
-    $this->data['allPrivileges'] =  $this->privilegeModel->fetchRecords();
-
-    $this->groupPrivilegesModel = new groupPrivileges();
+  private function fetchOldPrivilegesToEdit(){
+    $this->data['allPrivileges'] =  $this->privilegeModel->fetchModelRecords();
     $this->groupPrivilegesModel->groupId = $this->data['currentGroup']->id;
     $this->data['storedPrivileges'] = $this->groupPrivilegesModel->getPrivilegesByGroupId();
     $this->data['currentGroupIds'] = [];    // current group privileges' Id
@@ -143,7 +133,9 @@ class userGroups extends controller
 
   private function editGroupName(){
     $this->model->Name = $this->sanitizeString($_POST['groupName']);
-    if ($this->model->Name !== $this->data['currentGroup']->name) // check if the group name is modified or not
+
+    // check if the name was not modified --> which means the user modified anything else
+    if ($this->model->Name !== $this->data['currentGroup']->name)
     {
       $this->model->id = $this->data['currentGroup']->id;
       $this->model->edit();
@@ -171,18 +163,19 @@ class userGroups extends controller
   }
 
   public function edit(){
-
+    // preparing some needed info
+    $this->pageTitle = "Edit Group";
     $this->fetchGroupData();
-    $this->fetchOldPrivileges();
+    $this->fetchOldPrivilegesToEdit();
 
+    // Updating the old data
     if (isset($_POST['submit'])) {
 
       if (isset($_POST['privileges']))
       {
-        if (! $this->checkboxesValidation())
-        {
+        if (! $this->checkBoxesValidation()){
           $this->addMessageToUser("error", "Something wrong has happened while modifying privileges, try again.");
-          helpers::reDirect("userGroups/edit/{$this->groupId}");
+          $this->view();
           return;
         }
 
@@ -192,25 +185,28 @@ class userGroups extends controller
         // add the new selected privileges
         $this->addNewModifiedPrivileges();
       }
-
       $this->editGroupName();
-      $this->addMessageToUser('success', "Group is Modified successfully.");
-      $this->redirectToHomePage();
+      $this->addMessageToUser('success', "Group has been Modified successfully.");
+
+      // Displaying the new data
+      $this->fetchGroupData();
+      $this->fetchOldPrivilegesToEdit();
+      $this->view($this->groupId);
+      return;
     }
 
-    $this->pageTitle = "Edit Group";
     $this->view();
   }
 
   public function delete(){
-    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
+    $this->checkIdValidity();
 
     if($this->model->deleteByPK())
       $this->addMessageToUser('success', "Group has been removed successfully.");
     else
       $this->addMessageToUser('errors', "Failed to remove this group.");
 
+//    helpers::reDirectAfterTime("userGroups", 5);  // todo-me: search for another way to change the url
     $this->main();
-//    header("refresh:5;url=test.php"); //todo-me: uncomment this and search for the error
   }
 }
