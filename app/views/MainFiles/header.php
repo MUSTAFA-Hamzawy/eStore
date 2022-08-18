@@ -13,9 +13,13 @@
     <link rel="stylesheet" href="<?= BACK_ASSETS ?>plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= BACK_ASSETS ?>plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= BACK_ASSETS ?>plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="<?= BACK_ASSETS ?>plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="<?= BACK_ASSETS ?>plugins/toastr/toastr.min.css">
+
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= BACK_ASSETS ?>dist/css/adminlte.min.css">
-<!--    todo-me add title and faveicon-->
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->

@@ -1,5 +1,5 @@
 <?php require_once "header.php" ?>
-<?php require_once "sidebar.php" // todo-me make add button ?>
+<?php require_once "sidebar.php" ?>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">

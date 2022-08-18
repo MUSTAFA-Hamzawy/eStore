@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= ROOT_LINK . "UserGroups" ?>"
+                            <a href="<?= ROOT_LINK . "userGroups" ?>"
                                class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>
