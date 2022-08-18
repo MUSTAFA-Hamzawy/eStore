@@ -35,54 +35,28 @@
 
               <div class="card-body">
 
-<!-- todo-me : if we refreshed two things are happened : the item inserted again, msg is still shown-->
-            <?php if(isset($this->massegesToUser['error'])):
-              foreach($this->massegesToUser['error'] as $error):
-                ?>
-                  <div class="row" id="show-5s">
-                      <div class="col-6">
+            <?php if(isset($this->massegesToUser['error'])):?>
+                  <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
+            <?php endif; ?>
 
-                          <li class="list-group-item list-group-item-success">
-                              <i class="fas fa-exclamation-triangle"></i>
-                            <?= $error ?>
-                          </li>
-                      </div>
-                  </div>
-              <?php unset($this->massegesToUser); endforeach;endif; ?>
+            <?php if(isset($this->massegesToUser['success'])):?>
+                <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
+            <?php endif; ?>
 
-            <?php if(isset($this->massegesToUser['success'])):
-              foreach($this->massegesToUser['success'] as $success):
-                ?>
-                  <div class="row" id="show-5s">
-                      <div class="col-6">
+            <?php if(isset($this->massegesToUser['warning'])):?>
+                <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
+            <?php endif; ?>
 
-                          <li class="list-group-item list-group-item-success">
-                              <i class="fas fa-check"></i>
-                            <?= $success ?>
-                          </li>
-                      </div>
-                  </div>
-              <?php unset($this->massegesToUser); endforeach;endif; ?>
-
-            <?php if(isset($this->massegesToUser['warning'])):
-              foreach($this->massegesToUser['warning'] as $warning):
-                ?>
-                  <div class="row" id="show-5s">
-                      <div class="col-6">
-                          <li class="list-group-item list-group-item-warning">
-                              <i class="fas fa-exclamation-triangle"></i>
-                            <?= $warning ?>
-                          </li>
-                      </div>
-                  </div>
-              <?php unset($this->massegesToUser); endforeach;endif; ?>
-
-              <form autocomplete="on" method="POST">
+                  <form autocomplete="off" method="POST" class="needs-validation" novalidate>
                   <div class="card-body col-6">
                       <div class="form-group">
                           <label for="groupName">Group Name</label>
-                          <input type="text" class="form-control" id="groupName"
-                                 placeholder="Ex: Managers" name="groupName">
+                          <input type="text" class="validationRequired form-control" id="groupName"
+                                 placeholder="Ex: Managers" name="groupName"
+                          required>
+                          <div class="invalid-feedback">
+                              Group Name is required!.
+                          </div>
                       </div>
                       <label for="groupName">Privileges</label>
                     <?php if (!empty($this->data['privileges'])): $i=0; foreach ($this->data['privileges'] as
@@ -134,16 +108,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?= BACK_ASSETS?>dist/js/demo.js"></script>
 <!-- Page specific script -->
-<script>
-    document.getElementById("show-5s").style.transitionDuration   = "0.5s";
-    setTimeout(function() {
-        document.getElementById("show-5s").style.opacity = "75%";
-    }, 3000);
-    setTimeout(function() {
-        document.getElementById("show-5s").style.opacity = "0";
-        document.getElementById("show-5s").style.display = "none";
-    }, 5000);
-</script>
+<?php require_once USER_MESSAGES?>
+<!--Form Validation -->
+<?php require_once FORM_VALIDATION?>
+<!--Prevent resubmission  -->
+<?php require_once RESUBMISSION_PREVENT?>
 
 </body>
 </html>
