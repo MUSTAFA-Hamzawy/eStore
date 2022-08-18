@@ -17,7 +17,7 @@ class group extends model
     parent::__construct();
   }
 
-  public function fetchRecords(){
+  public function fetchModelRecords(){
     $name = self::tableName;
     $query = "SELECT * FROM `{$name}`";
     return $this->db->rows($query);
@@ -50,7 +50,5 @@ class group extends model
     return $this->db->delete(self::tableName, $condition);
   }
 
-  public function getLastInsertedId(){
-    return $this->db->lastInsertId();
-  }
+
 }

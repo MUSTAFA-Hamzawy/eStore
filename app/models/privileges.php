@@ -18,7 +18,7 @@ class privileges extends model
     parent::__construct();
   }
 
-  public function fetchRecords(){   //todo-me : common functions in the abstract model + think of static functions
+  public function fetchModelRecords(){   //todo-me : common functions in the abstract model + think of static functions
     $name = self::tableName;
     return $this->db->rows("SELECT * FROM " . self::tableName);
   }
@@ -45,7 +45,7 @@ class privileges extends model
     return $this->db->update(self::tableName, $data, $condition);
   }
 
-  public function delete(){
+  public function deleteByPK(){
     $condition = [$this->primaryKey => $this->id];
     return $this->db->delete(self::tableName, $condition);
   }
