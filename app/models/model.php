@@ -4,7 +4,7 @@
 namespace MVC\models;
 use Dcblogdev\PdoWrapper\Database;
 
-class model
+abstract class model
 {
     protected $db;
 
@@ -24,4 +24,15 @@ class model
 
         $this->db = new Database($options);
     }
+
+    public function getLastInsertedId(){
+      return $this->db->lastInsertId();
+    }
+
+    abstract public function fetchModelRecords();
+    abstract public function fetchRecord();
+    abstract public function add();
+    abstract public function edit();
+    abstract public function deleteByPK();
+
 }
