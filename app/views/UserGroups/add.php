@@ -51,7 +51,7 @@
                   <div class="card-body col-6">
                       <div class="form-group">
                           <label for="groupName">Group Name</label>
-                          <input type="text" class="validationRequired form-control" id="groupName"
+                          <input type="text" class="form-control" id="groupName"
                                  placeholder="Ex: Managers" name="groupName"
                           required>
                           <div class="invalid-feedback">
@@ -109,10 +109,11 @@
 <script src="<?= BACK_ASSETS?>dist/js/demo.js"></script>
 <!-- Page specific script -->
 <?php require_once USER_MESSAGES?>
-<!--Form Validation -->
-<?php require_once FORM_VALIDATION?>
 <!--Prevent resubmission  -->
 <?php require_once RESUBMISSION_PREVENT?>
+<!--Form Validation -->
+<?php require_once FORM_VALIDATION?>
+
 
 </body>
 </html>
