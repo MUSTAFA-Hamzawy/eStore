@@ -6,6 +6,40 @@ namespace MVC\core;
 
 trait validation
 {
+
+  private $regExPattern = [
+      'num'   => '/^[0-9]+(?:\.[0-9]+)?$/',     // no -ve values
+      'int'   => '/^[0-9]+$/',
+      'float' => '/^[0-9]+\.[0-9]+$/',
+      'alphabet' => '/^[a-z\p{Arabic}]+$/iu',
+      'alpha_numeric' => '/^[a-z0-9\p{Arabic}]+$/iu',
+      'date' => '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/',
+      'email' =>  '/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i',
+      'url' => "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/"
+
+  ];
+
+  public function isAlphabetical($value){
+    return (boolean) preg_match($this->regExPattern['alphabet'], $value);
+  }
+
+  public function isAlphaNumeric($value){
+    return (boolean) preg_match($this->regExPattern['alpha_numeric'], $value);
+  }
+
+  public function isDate($value){
+    return (boolean) preg_match($this->regExPattern['date'], $value);
+  }
+
+  public function isEmail($value){
+    return (boolean) preg_match($this->regExPattern['email'], $value);
+  }
+
+  public function isUrl($value){
+    return (boolean) preg_match($this->regExPattern['url'], $value);
+  }
+
+
   public function sanitizeString($str)
   {
     $str = filter_var($str,FILTER_SANITIZE_STRING);
@@ -82,4 +116,9 @@ trait validation
     if ($pass !== $rePass)
       $this->addMessageToUser('errors',"Two Passwords are not matching");
   }
+
+
+
+
+
 }
