@@ -7,6 +7,7 @@ namespace MVC\controllers;
 use MVC\core\session;
 use MVC\core\validation;
 use MVC\core\helpers;
+use MVC\core\Messenger;
 
 abstract class controller
 {
@@ -18,10 +19,14 @@ abstract class controller
   protected $massegesToUser;
   protected $model;
   protected $pageTitle;
+  protected $messenger;
+  protected $db;
 
-  public function __construct()
+  public function __construct($db)
   {
     session::start();
+    $this->messenger = Messenger::getInstance();
+    $this->db = $db;
   }
 
   public function setValues($controller, $method, $parameters)

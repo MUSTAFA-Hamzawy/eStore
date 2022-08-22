@@ -4,6 +4,7 @@ namespace MVC\controllers;
 
 
 use MVC\core\helpers;
+use MVC\core\Messenger;
 use MVC\models\group;
 use MVC\models\privileges as privilegesModel;
 use MVC\models\groupPrivileges;
@@ -14,19 +15,19 @@ class userGroups extends controller
   public $groupPrivilegesModel;
   public $groupId;
 
-  public function __construct(){
-    parent::__construct();
+  public function __construct($db){
+    parent::__construct($db);
 
     $this->viewFolderName = "UserGroups";
-    $this->model = new group();
-    $this->privilegeModel = new privilegesModel();
-    $this->groupPrivilegesModel = new groupPrivileges();
+    $this->model = new group($db);
+    $this->privilegeModel = new privilegesModel($db);
+    $this->groupPrivilegesModel = new groupPrivileges($db);
   }
 
   public function main()
   {
-    if (empty($_SESSION))     //todo-me : think of another way
-      helpers::reDirect("admin");
+//    if (empty($_SESSION))     //todo-me : think of another way
+//      helpers::reDirect("admin");
 
     $this->data['groups'] = $this->model->fetchModelRecords();
     $this->pageTitle = 'Groups';
@@ -83,18 +84,17 @@ class userGroups extends controller
       {
         // Inserting the validity of the checkboxes
         if (! $this->checkBoxesValidation()){
-          $this->addMessageToUser("error", "Failed! something wrong with privileges, try again.");
+          $this->messenger->addMessage("Failed! something wrong with privileges, try again.", Messenger::ERROR_MESSAGE);
           $this->view();
           return;
         }
 
         // Inserting the group name
         $this->groupId = $this->addGroup();
-        $this->addMessageToUser('success', "Group has been added successfully.");
-
+        $this->messenger->addMessage("Group has been added successfully.");
         // Inserting the privileges
         if (! $this->addPrivileges($_POST['privileges']))
-          $this->addMessageToUser("warning", "Failed to add some privileges, you may need to edit this group.");
+          $this->messenger->addMessage("Failed to add some privileges, you may need to edit this group.", Messenger::WARNING_MESSAGE);
       }
       $this->view();
     }
@@ -174,7 +174,8 @@ class userGroups extends controller
       if (isset($_POST['privileges']))
       {
         if (! $this->checkBoxesValidation()){
-          $this->addMessageToUser("error", "Something wrong has happened while modifying privileges, try again.");
+          $this->messenger->addMessage("Something wrong has happened while modifying privileges, try again.",
+              Messenger::ERROR_MESSAGE);
           $this->view();
           return;
         }
@@ -186,7 +187,7 @@ class userGroups extends controller
         $this->addNewModifiedPrivileges();
       }
       $this->editGroupName();
-      $this->addMessageToUser('success', "Group has been Modified successfully.");
+      $this->messenger->addMessage("Group has been Modified successfully.");
 
       // Displaying the new data
       $this->fetchGroupData();
@@ -202,11 +203,11 @@ class userGroups extends controller
     $this->checkIdValidity();
 
     if($this->model->deleteByPK())
-      $this->addMessageToUser('success', "Group has been removed successfully.");
+      $this->messenger->addMessage( "Group has been removed successfully.");
     else
-      $this->addMessageToUser('errors', "Failed to remove this group.");
+      $this->messenger->addMessage( "Failed to remove this group.", Messenger::ERROR_MESSAGE);
 
-//    helpers::reDirectAfterTime("userGroups", 5);  // todo-me: search for another way to change the url
+    helpers::reDirectAfterTime($this->controller, 2);
     $this->main();
   }
 }

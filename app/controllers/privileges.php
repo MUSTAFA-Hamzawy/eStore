@@ -5,22 +5,23 @@ namespace MVC\controllers;
 
 
 use MVC\core\helpers;
+use MVC\core\Messenger;
 use MVC\models\privileges as privilegeModel;
 
 class privileges extends controller
 {
-  public function __construct(){
-    parent::__construct();
+  public function __construct($db){
+    parent::__construct($db);
 
     $this->viewFolderName = "privileges";
-    $this->model = new privilegeModel();
+    $this->model = new privilegeModel($db);
     $this->data = $this->model->fetchModelRecords();
   }
 
   public function main()    // default method
   {
-    if (empty($_SESSION))
-      helpers::reDirect("admin");
+//    if (empty($_SESSION))
+//      helpers::reDirect("admin");
 
     $this->pageTitle = 'Privileges';
     $this->method = "main";
@@ -37,9 +38,9 @@ class privileges extends controller
       $this->model->url_title = $this->sanitizeString($_POST['link']);
 
       if ($this->model->add())
-        $this->addMessageToUser('success', "Privilege has been added successfully.");
+        $this->messenger->addMessage("Privilege has been added successfully.");
       else
-        $this->addMessageToUser('errors', "Failed to add this privilege.");
+        $this->messenger->addMessage( "Failed to add this privilege.", Messenger::ERROR_MESSAGE);
     }
 
     $this->view();
@@ -69,9 +70,9 @@ class privileges extends controller
       $this->model->Name = $this->sanitizeString($_POST['privilege']);
       $this->model->url_title = $this->sanitizeString($_POST['link']);
       if ($this->model->edit())
-        $this->addMessageToUser('success', "Privilege is Updated successfully.");
+        $this->messenger->addMessage("Privilege is Updated successfully.");
       else
-        $this->addMessageToUser('errors', "Failed to update this privilege.");
+        $this->messenger->addMessage("Failed to update this privilege.", Messenger::ERROR_MESSAGE);
     }
   }
 
@@ -84,14 +85,15 @@ class privileges extends controller
     $this->view();
   }
 
-  public function delete(){   //todo: problem: last inserted item is the one which deleted
+  public function delete(){
     $this->checkIdValidity();
 
     if($this->model->deleteByPK())
-      $this->addMessageToUser('success', "Privilege is Removed successfully.");
+      $this->messenger->addMessage( "Privilege is Removed successfully.");
     else
-      $this->addMessageToUser('errors', "Failed to remove this privilege.");
+      $this->messenger->addMessage("Failed to remove this privilege.", Messenger::ERROR_MESSAGE);
 
+    helpers::reDirectAfterTime($this->controller, 2);
     $this->main();
   }
 
