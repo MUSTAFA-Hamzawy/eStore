@@ -9,11 +9,14 @@ class UrlHandler
     private $controller;
     private $method;
     private $parameters;
+    private $databaseObj;
 
-    public function __construct(){
+    public function __construct($db){
         $this->method = "main";
+        $this->databaseObj = $db;
         $this->analyzeUrl();
         $this->render();
+
     }
 
     private function analyzeUrl(){
@@ -46,7 +49,7 @@ class UrlHandler
             $this->controller = "home";
         }
 
-        $controllerInstance = new $controllerClass;
+        $controllerInstance = new $controllerClass($this->databaseObj);
 
         if (! method_exists($controllerInstance, $this->method))
             $this->method = "main";
