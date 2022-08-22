@@ -27,23 +27,13 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-                <a class="btn btn-info" href="<?= ROOT_LINK . 'privileges'?>">
+                <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller?>">
                     <i class="fas fa-home"></i>
                 </a>
             </div>
             <!-- /.card-header -->
 
-            <?php if(isset($this->massegesToUser['error'])):?>
-                <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
-            <?php endif; ?>
-
-            <?php if(isset($this->massegesToUser['success'])):?>
-                <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
-            <?php endif; ?>
-
-            <?php if(isset($this->massegesToUser['warning'])):?>
-                <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
-            <?php endif; ?>
+            <?php require_once SHOW_USER_MESSAGES?>
 
               <form autocomplete="off" method="POST" class="needs-validation" novalidate>
                   <div class="card-body">
@@ -51,6 +41,9 @@
                           <label for="privilege">Privilege</label>
                           <input type="text" class="form-control" id="privilege"
                                  placeholder="Ex: Add a new supplier" name="privilege" required>
+                          <div class="invalid-feedback">
+                              Privilege Name is required!.
+                          </div>
                       </div>
                       <div class="form-group">
                           <label for="link">Link</label>

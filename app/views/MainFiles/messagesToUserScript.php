@@ -17,16 +17,11 @@
             });
         });
 
-      <?php if(isset($this->massegesToUser['success'])):?>
-        toastr.success('<?php echo $this->massegesToUser['success'] ?>')
-      <?php endif; ?>
+      <?php $messeges = $this->messenger->getMesseges();
+      if (! is_null($messeges)):
+      foreach ($messeges as $msg):?>
+        toastr.<?= strtolower($msg[0])?>('<?= $msg[1] ?>')
+      <?php endforeach; endif; ?>
 
-      <?php if(isset($this->massegesToUser['error'])):?>
-        toastr.error('<?php echo $this->massegesToUser['error'] ?>')
-      <?php endif; ?>
-
-      <?php if(isset($this->massegesToUser['warning'])):?>
-        toastr.warning('<?php echo $this->massegesToUser['warning'] ?>')
-      <?php endif; ?>
     }
 </script>

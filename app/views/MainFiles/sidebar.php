@@ -42,7 +42,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= ROOT_LINK . "user/showUsersInfo" ?>" class="nav-link">
+                            <a href="<?= ROOT_LINK . "user" ?>" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Users List</p>
                             </a>

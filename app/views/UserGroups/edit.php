@@ -37,17 +37,7 @@
 
               <div class="card-body">
 
-                <?php if(isset($this->massegesToUser['error'])):?>
-                    <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
-                <?php endif; ?>
-
-                <?php if(isset($this->massegesToUser['success'])):?>
-                    <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
-                <?php endif; ?>
-
-                <?php if(isset($this->massegesToUser['warning'])):?>
-                    <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
-                <?php endif; ?>
+                <?php require_once SHOW_USER_MESSAGES?>
 
             <form autocomplete="off" method="POST" class="needs-validation" novalidate>
               <div class="card-body">

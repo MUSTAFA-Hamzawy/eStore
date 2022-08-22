@@ -26,24 +26,14 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-                <a class="btn btn-success" href="<?= ROOT_LINK . "userGroups/add"?>">
+                <a class="btn btn-success" href="<?= ROOT_LINK . $this->controller . "/add"?>">
                     Add <i class="fas fa-plus-circle"></i>
                 </a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
 
-              <?php if(isset($this->massegesToUser['error'])):?>
-                  <button class="btn btn-success auto-click toastrDefaultError" hidden></button>
-              <?php endif; ?>
-
-              <?php if(isset($this->massegesToUser['success'])):?>
-                  <button class="btn btn-success auto-click toastrDefaultSuccess" hidden></button>
-              <?php endif; ?>
-
-              <?php if(isset($this->massegesToUser['warning'])):?>
-                  <button class="btn btn-success auto-click toastrDefaultWarning" hidden></button>
-              <?php endif; ?>
+              <?php require_once SHOW_USER_MESSAGES?>
 
               <table id="dataTable" class="table table-bordered table-hover">
                 <thead>
@@ -55,19 +45,19 @@
                 <tbody>
                 <?php if (!empty ($this->data['groups'])):
                         foreach ($this->data['groups'] as $group):
+
                 ?>
                 <tr>
                   <td><?= $group->name ?>
                   </td>
 
                   <td style="text-align: center">
-                        <a class="btn btn-info" href="<?= ROOT_LINK .
-                        "userGroups/edit/" . $group->id?>">
+                        <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller . '/edit/' . $group->id?>">
                             Edit  <i class="fas fa-edit"></i>
                         </a>
-                        <a class="btn btn-danger" data-toggle="modal" data-target="#modal-warning"
-                           href="<?= ROOT_LINK . "userGroups/delete/" . $group->id?>"
-                            >
+                        <a class="btn btn-danger"
+                           href="<?= ROOT_LINK . $this->controller . "/delete/" . $group->id?>"
+                           onclick="javascript:return confirm('Are You Confirm Deletion');">
                             Delete
                             <i class="fas fa-trash"></i>
                             </a>
@@ -96,32 +86,6 @@
 
 </div>
 <!-- ./wrapper -->
-
-<!-- delete Confirmation -->
-<div class="modal fade" id="modal-warning">
-    <div class="modal-dialog">
-        <div class="modal-content bg-warning">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirmation !</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Confirm that you want to delete this group.</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-outline-light confirm-agree"
-                        onclick="javascript:confirmationDelete($(this));return false;"
-                        href='<?php if(!empty ($this->data['groups']))
-                            echo ROOT_LINK . "userGroups/delete/{$group->id}"?>'>Yes</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 
 <!-- jQuery -->
 <script src="<?= BACK_ASSETS?>plugins/jquery/jquery.min.js"></script>
@@ -163,13 +127,6 @@
             "responsive": true,
         });
     });
-</script>
-<!--Confirm Delete-->
-<script>
-    function confirmationDelete(anchor)
-    {
-        window.location=anchor.attr("href");
-    }
 </script>
 <!-- Page specific script -->
 <?php require_once USER_MESSAGES?>
