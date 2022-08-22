@@ -19,6 +19,7 @@ define("SIDEBAR", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATO
 define("USER_MESSAGES", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "messagesToUserScript.php");
 define("FORM_VALIDATION", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "formValidation.php");
 define("RESUBMISSION_PREVENT", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "refreshSubmissionPrevent.php");
+define("SHOW_USER_MESSAGES", VIEWS . DIRECTORY_SEPARATOR . "MainFiles" . DIRECTORY_SEPARATOR . "userMessegesPHP.php");
 
 
 // database info
