@@ -35,7 +35,7 @@
 
             <?php require_once SHOW_USER_MESSAGES?>
 
-              <form autocomplete="off" method="POST" class="needs-validation" novalidate>
+              <form autocomplete="off" method="POST" class="needs-validation col-lg-6 col-sm-8" novalidate>
                   <div class="card-body">
                       <div class="form-group">
                           <label for="privilege">Privilege</label>
