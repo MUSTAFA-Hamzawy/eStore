@@ -4,10 +4,10 @@
 namespace MVC\core;
 
 
-trait validation
+class validation
 {
 
-  private $regExPattern = [
+  private static $regExPattern = [
       'num'   => '/^[0-9]+(?:\.[0-9]+)?$/',     // no -ve values
       'int'   => '/^[0-9]+$/',
       'float' => '/^[0-9]+\.[0-9]+$/',
@@ -19,38 +19,42 @@ trait validation
 
   ];
 
-  public function isAlphabetical($value){
-    return (boolean) preg_match($this->regExPattern['alphabet'], $value);
+  public static function isAlphabetical($value){
+    return (boolean) preg_match(self::$regExPattern['alphabet'], $value);
   }
 
-  public function isAlphaNumeric($value){
-    return (boolean) preg_match($this->regExPattern['alpha_numeric'], $value);
+  public static function isAlphaNumeric($value){
+    return (boolean) preg_match(self::$regExPattern['alpha_numeric'], $value);
   }
 
-  public function isDate($value){
-    return (boolean) preg_match($this->regExPattern['date'], $value);
+  public static function isDate($value){
+    return (boolean) preg_match(self::$regExPattern['date'], $value);
   }
 
-  public function isEmail($value){
-    return (boolean) preg_match($this->regExPattern['email'], $value);
+  public static function isEmail($value){
+    return (boolean) preg_match(self::$regExPattern['email'], $value);
   }
 
-  public function isUrl($value){
-    return (boolean) preg_match($this->regExPattern['url'], $value);
+  public static function isUrl($value){
+    return (boolean) preg_match(self::$regExPattern['url'], $value);
   }
 
-
-  public function sanitizeString($str)
+  public static function between($value, $min, $max)
   {
-    $str = filter_var($str,FILTER_SANITIZE_STRING);
-    return $str;
+    return $value >= $min && $value <= $max;
   }
 
-  public function validateEmail(&$email)
+
+  public static function sanitizeString($str)
+  {
+    return filter_var($str,FILTER_SANITIZE_STRING);
+  }
+
+  public static function validateEmail(&$email)
   {
     if (empty($email))
     {
-      $this->addMessageToUser('errors', "Email Field can't be empty.");
+      //self::$addMessageToUser('errors', "Email Field can't be empty.");
       return;
     }
 
@@ -59,63 +63,56 @@ trait validation
 
     if ($email === false)
     {
-      $this->addMessageToUser('errors',"Invalid Email");
+      //self::$addMessageToUser('errors',"Invalid Email");
       return;
     }
   }
 
-  public function validateName(&$str)
+  public static function validateName(&$str)
   {
     if (empty($str))
     {
-      $this->addMessageToUser('errors',"Name Field is required");
+      //self::$addMessageToUser('errors',"Name Field is required");
       return;
     }
-    $this->sanitizeString($str);
+    //self::$sanitizeString($str);
   }
 
-  public function checkPasswordPower(&$str){
+  public static function checkPasswordPower(&$str){
     if (strlen($str) < 8)
     {
-      $this->addMessageToUser('errors',"Write more powerful password");
+      //self::$addMessageToUser('errors',"Write more powerful password");
       return;
     }
     if (! preg_match("/[a-z]/i", $str) || ! preg_match("/[0-9]/", $str))
     {
       {
-        $this->addMessageToUser('errors',"Password must be mix of characters and numbers");
+        //self::$addMessageToUser('errors',"Password must be mix of characters and numbers");
         return;
       }
     }
     if (! preg_match("/[A-Z]/", $str))
     {
       {
-        $this->addMessageToUser('errors',"Password must have at least one Capital character");
+        //self::$addMessageToUser('errors',"Password must have at least one Capital character");
         return;
       }
     }
   }
 
-  public function validatePassword(&$str)
+  public static function validatePassword(&$str)
   {
     if (empty($str))
     {
-      $this->addMessageToUser('errors',"Password Field is required");
+      //self::$addMessageToUser('errors',"Password Field is required");
       return;
     }
 
-    $this->sanitizeString($str);
+    //self::$sanitizeString($str);
 
-    $this->checkPasswordPower($str);
+   // self::$checkPasswordPower($str);
   }
 
-  public function checkSamePassword($pass, $rePass){
-
-    $this->sanitizeString($rePass);
-
-    if ($pass !== $rePass)
-      $this->addMessageToUser('errors',"Two Passwords are not matching");
-  }
 
 
 

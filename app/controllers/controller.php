@@ -11,7 +11,6 @@ use MVC\core\Messenger;
 
 abstract class controller
 {
-  use validation;
   protected $controller;
   protected $method;
   protected $parameters;
