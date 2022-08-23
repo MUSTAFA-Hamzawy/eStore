@@ -28,3 +28,10 @@ define("PASSWORD", '');
 define("USER_NAME", 'root');
 define("HOST_NAME", 'localhost');
 define("PORT", 3306);
+
+// Session configurations
+define('SESSION_NAME', "MVC_APP");                      // Set session name : string
+define('SESSION_MAX_LIFE_TIME', 0);
+define('SESSION_PATH', '/');
+define('SESSIONS_DIR', APP . DIRECTORY_SEPARATOR . "sessions");      // The path of sessions dir
+define('SESSIONS_CIPHER_METHOD', 'aes-128-ctr');
