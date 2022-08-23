@@ -38,7 +38,7 @@
                             <table id="dataTable" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th >Name</th>
+                                    <th >Username</th>
                                     <th >Group</th>
                                     <th >Phone Number</th>
                                     <th >E-mail</th>
@@ -52,18 +52,18 @@
                                   foreach ($this->data['mainData'] as $userInfo):
                                     ?>
                                       <tr>
-                                          <td><?= $userInfo['username'] ?></td>
-                                          <td><?= $userInfo['groupName'] ?></td>
-                                          <td><?= $userInfo['phone_number'] ?></td>
-                                          <td><?= $userInfo['email'] ?></td>
-                                          <td><?= $userInfo['last_login'] ?></td>
-                                          <td><?= $userInfo['join_date'] ?></td>
+                                          <td><?= $userInfo->username?></td>
+                                          <td><?= $userInfo->groupName?></td>
+                                          <td><?= $userInfo->phone_number?></td>
+                                          <td><?= $userInfo->email?></td>
+                                          <td><?= $userInfo->last_login?></td>
+                                          <td><?= $userInfo->join_date?></td>
                                           <td style="width:17%; text-align: center">
-                                              <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller . "/edit/" . $userInfo['id']?>">
+                                              <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller . "/edit/" . $userInfo->id?>">
                                                   Edit  <i class="fas fa-edit"></i>
                                               </a>
                                               <a class="btn btn-danger"
-                                                 href="<?= ROOT_LINK . $this->controller . "/delete/" . $userInfo['id']?>"
+                                                 href="<?= ROOT_LINK . $this->controller . "/delete/" . $userInfo->id?>"
                                                  onclick="javascript:return confirm('Are You Confirm Deletion');">
                                                   Delete
                                                   <i class="fas fa-trash"></i>

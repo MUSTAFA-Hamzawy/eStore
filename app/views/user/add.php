@@ -42,30 +42,35 @@
                   <input type="text" class="form-control" id="username"
                          placeholder="Full Name" name="username" required
                         min="5" maxlength="25"
+                         value="<?= \MVC\core\helpers::showValue('username') ?>"
                   >
                 </div>
                 <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" class="form-control"
-                         placeholder="Type your email" id="email" name="email" required>
+                         placeholder="Type your email" id="email" name="email" required
+                         value="<?= \MVC\core\helpers::showValue('email') ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="password">Password</label>
                   <input type="password" class="form-control"
-                         placeholder="Powerful Password" id="password" name="password" required>
+                         placeholder="Powerful Password" id="password" name="password" required
+                         value="<?= \MVC\core\helpers::showValue('password') ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="CPassword">Confirm Password</label>
                   <input type="password" class="form-control"
-                         placeholder="Powerful Password" id="CPassword" name="CPassword" required>
+                         placeholder="Powerful Password" id="CPassword" name="CPassword" required
+                         value="<?= \MVC\core\helpers::showValue('CPassword') ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="phone">Phone Number</label>
                   <input type="number" class="form-control"
-                         placeholder="Phone Number" id="phone" name="phone">
+                         placeholder="Phone Number" id="phone" name="phone"
+                         value="<?= \MVC\core\helpers::showValue('phone') ?>">
                 </div>
 
                 <div class="form-group" data-select2-id="43">
