@@ -40,7 +40,7 @@ class validation
   }
 
   public static function between($value, $min, $max)
-  {
+  {if ($value >= $min && $value <= $max)
     return $value >= $min && $value <= $max;
   }
 
