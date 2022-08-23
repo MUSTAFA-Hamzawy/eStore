@@ -31,13 +31,18 @@ class user extends controller
       $this->method = "main";
       $this->view();
     }
+
     private function validateChosenGroup(){
 //      print_r($_POST);die;
       $selectedGroupId = filter_var($_POST['selectedGroup'], FILTER_SANITIZE_NUMBER_INT);
       if (empty($selectedGroupId) || ! is_integer((int)$selectedGroupId))
+      {
         $this->messenger->addMessage("Invalid Chosen Group", Messenger::ERROR_MESSAGE);
+        return false;
+      }
       else
         $this->model->groupId = $selectedGroupId;
+      return true;
     }
 
     private function validateEmail(){
@@ -95,8 +100,7 @@ class user extends controller
       $this->messenger->addMessage("Write more powerful password", Messenger::WARNING_MESSAGE);
       return false;
     }
-
-    if (! preg_match("/[a-z]/i", $password) || ! preg_match("/[0-9]/", $password))
+    if (! preg_match("/[a-z@#&]/i", $password) || ! preg_match("/[0-9]/", $password))
     {
         $this->messenger->addMessage("Password must be mix of characters and numbers", Messenger::WARNING_MESSAGE);
         return false;
@@ -113,7 +117,6 @@ class user extends controller
 
     private function validatePassword(){
     $password = validation::sanitizeString($_POST['password']);
-
     // check not empty
     if (empty($password))
     {
@@ -132,8 +135,8 @@ class user extends controller
     if (! $this->checkPasswordPower($password))
       return false;
 
-    $this->model->password = $password;
-    return $password;
+    $this->model->password = $this->model->hashPassword($password);
+    return $password;   // return un-encrypted password
   }
 
     private function checkSamePassword($pass, $rePass){
@@ -166,22 +169,22 @@ class user extends controller
       $this->validateChosenGroup();
 
       // validating username
-      $condition = $this->validateUsername();
+      if(! $this->validateUsername() ) return false;
 
       // validating Email
-      $condition = $this->validateEmail();
+      if (! $this->validateEmail()) return false;
+
+      // validating Phone Number
+      if (! empty($_POST['phone']) && !$this->validatePhoneNumber()) return false;
 
       // validating Password
       $password  = $this->validatePassword();
+      if (!$password) return false;
 
       // validating Confirm Password
-      $condition = $this->checkSamePassword($password, $_POST['CPassword']);
+      if (! $this->checkSamePassword($password, $_POST['CPassword'])) return false;
 
-      // validating Phone Number
-      if (! empty($_POST['phone']))
-        $condition = $this->validatePhoneNumber();
-
-      return $condition;
+      return true;
     }
 
     private function checkAddSuccess(){
@@ -209,10 +212,14 @@ class user extends controller
 
     }
 
+    private function fetchGroups(){
+      $this->data['groups'] = $this->groupModel->fetchModelRecords();
+    }
+
     public function add(){
 
     $this->pageTitle = "Add User";
-    $this->data['groups'] = $this->groupModel->fetchModelRecords();
+    $this->fetchGroups();
 
     if (isset($_POST['submit'])) {
 
@@ -225,16 +232,62 @@ class user extends controller
     $this->view();
   }
 
-    // To avoid if anyone from playing in the URL
-    private function checkIdValidity(){
-      if (!isset($this->parameters[0]))
-        $this->redirectToHomePage();
+  private function validEditCondition(){
+    // validating Selected Group && the phone number
+    if (! $this->validateChosenGroup())
+      return false;
 
-      $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
-
-      if (empty($this->model->id))
-        $this->redirectToHomePage();
+    if (empty($_POST['phone']))
+    {
+      $this->model->phoneNumber = null;
+      return true;
     }
+
+    return $this->validatePhoneNumber();
+  }
+
+  // To avoid if anyone from playing in the URL
+  private function checkIdValidity(){
+    if (!isset($this->parameters[0]))
+      $this->redirectToHomePage();
+
+    $this->model->id = filter_var($this->parameters[0], FILTER_SANITIZE_NUMBER_INT);
+
+    if (empty($this->model->id))
+      $this->redirectToHomePage();
+  }
+
+  private function isSameOldData(){
+      return $this->data['storedUserInfo']->group_id == $_POST['selectedGroup'] &&
+             $this->data['storedUserInfo']->phone_number == $_POST['phone'];
+  }
+
+    public function edit(){
+      $this->pageTitle = "Edit User";
+      $this->checkIdValidity();
+      $this->fetchGroups();
+      $this->data['storedUserInfo'] = $this->model->fetchRecord();
+      if (isset($_POST['submit']))
+      {
+        if ($this->isSameOldData()) {
+          $this->messenger->addMessage("No change happened.", Messenger::WARNING_MESSAGE);
+          $this->view();
+          return;
+        }
+
+        if ($this->validEditCondition())
+        {
+          if ($this->model->edit())
+            $this->messenger->addMessage("User has been successfully modified.");
+          else
+            $this->messenger->addMessage("Failed.", Messenger::ERROR_MESSAGE);
+        }else
+            $this->messenger->addMessage("Failed.", Messenger::ERROR_MESSAGE);
+      }
+      $this->data['storedUserInfo'] = $this->model->fetchRecord();
+      $this->view();
+    }
+
 
     public function delete(){
       $this->checkIdValidity();
