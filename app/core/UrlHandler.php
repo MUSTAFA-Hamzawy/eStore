@@ -10,10 +10,12 @@ class UrlHandler
     private $method;
     private $parameters;
     private $databaseObj;
+    private $authenticationInstance;
 
     public function __construct($db){
         $this->method = "main";
         $this->databaseObj = $db;
+        $this->authenticationInstance = Authentication::getInstance();
         $this->analyzeUrl();
         $this->render();
 
@@ -46,9 +48,14 @@ class UrlHandler
         if (!class_exists($controllerClass))
         {
             $controllerClass = $namespace . "home"; // default page
-            $this->controller = "home";
+            $this->method = "home";
         }
 
+        if (! $this->authenticationInstance->isAuthorized())
+        {
+          $controllerClass = $namespace . "authentication";
+          $this->method = "login";
+          }
         $controllerInstance = new $controllerClass($this->databaseObj);
 
         if (! method_exists($controllerInstance, $this->method))

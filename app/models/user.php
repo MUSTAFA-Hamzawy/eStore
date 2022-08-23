@@ -2,6 +2,7 @@
 
 
 namespace MVC\models;
+use MVC\core\session;
 use PDO;
 
 class user extends model
@@ -20,6 +21,9 @@ class user extends model
   const USERNAME_EXIT_ERROR = 2;
   const PHONE_NUMBER_EXIT_ERROR = 3;
   const FAIL_ADD_CODE = 4;
+  const NOT_FOUND_USER = 5;
+  const DISABLED_USER = 6;
+  const SUCCESS_LOGIN = 7;
 
 
 
@@ -30,14 +34,35 @@ class user extends model
     $this->primaryKey = 'id';
     $this->tableSchema = array('username', 'password', 'email', 'phone_number', 'group_id',);
     $this->phoneNumber = null;   // optional
+
   }
 
   public function edit(){
-    $data = array_combine($this->tableSchema, [
-        $this->username, $this->password, $this->email, $this->phoneNumber,$this->groupId
-    ]);
+
+    $data = array_combine(
+        [$this->tableSchema[3], $this->tableSchema[4]],
+        [$this->phoneNumber,$this->groupId]
+    );
     $condition = [$this->primaryKey => $this->id];
     return $this->db->update($this->tableName, $data, $condition);
+  }
+
+  public function authenticate($username, $password, &$userData){
+    $password = md5($password);
+    $query = "SELECT * FROM `user` where `username` = ? AND `password` = ?";
+    $conditions = [$username, $password];
+    $data = $this->db->row($query, $conditions);
+    if ($data)
+    {
+      if ($data->status == 1){
+        session::start();
+        session::set('user', $data);
+        return self::SUCCESS_LOGIN;
+      }
+      if ($data->status == 0)
+        return self::DISABLED_USER;
+    }
+    return self::NOT_FOUND_USER;
   }
 
   private function isEmailExist(){
@@ -59,6 +84,10 @@ class user extends model
     $conditions = [$this->phoneNumber];
     $count = $this->db->count($query, $conditions);
     return $count > 0;
+  }
+
+  public function hashPassword($pass){
+    return md5($pass,);
   }
 
   public function add()
@@ -86,6 +115,7 @@ class user extends model
   public function getUserGroups(){
     $query = "SELECT `user`.`id`,`username`, `phone_number`,`email`, `last_login`,`join_date`,users_groups.name as groupName
                 from `user` INNER JOIN users_groups ON `user`.`group_id` = users_groups.id;";
-    return $this->db->run($query)->fetchAll(PDO::FETCH_ASSOC);
+    return $this->db->rows($query);
   }
+
 }
