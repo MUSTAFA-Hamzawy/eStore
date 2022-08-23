@@ -14,4 +14,13 @@ class helpers
     {
         header("refresh:{$seconds};url=" . ROOT_LINK . $path);
     }
+    public static function showValue($field, $object = null){
+        if (isset($_POST[$field]))
+          return $_POST[$field];
+
+        if (! is_null($object))
+          return $object->{$field};
+
+        return '';
+    }
 }
