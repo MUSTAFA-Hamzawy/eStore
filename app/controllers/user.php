@@ -10,17 +10,20 @@ use MVC\core\validation;
 use MVC\models\group;
 use MVC\models\model;
 use MVC\models\user as userModel;
+use MVC\models\userProfile;
 
 
 class user extends controller
 {
     private $groupModel;
+    private $profile;
     public function __construct($db){
       parent::__construct($db);
 
       $this->viewFolderName = 'user';
       $this->model = new userModel($db);
       $this->groupModel = new group($db);
+      $this->profile = new userProfile($db);
     }
 
     public function main()
@@ -162,6 +165,36 @@ class user extends controller
       return true;
     }
 
+    private function validateName(){
+
+      $fName = filter_var($_POST['fName'],FILTER_SANITIZE_STRING);
+      $lName = filter_var($_POST['lName'],FILTER_SANITIZE_STRING);
+
+      $result = true;
+      if (empty($fName))
+      {
+        $this->messenger->addMessage("First Name is required.", Messenger::ERROR_MESSAGE);
+        $result = false;
+      }
+      if (! validation::isAlphabetical($fName)) {
+        $this->messenger->addMessage("First Name must be only alphabetical.", Messenger::ERROR_MESSAGE);
+        $result = false;
+      }
+
+      if (!empty($lName) && !validation::isAlphabetical($lName)) {
+        $this->messenger->addMessage("Last Name must be only alphabetical.", Messenger::ERROR_MESSAGE);
+        $result = false;
+      }
+
+      if ($result)
+      {
+        $this->profile->firstName = $fName;
+        $this->profile->lastName  = $lName;
+      }
+
+      return $result;
+    }
+
     private function validateData(){
       $condition = true;
 
@@ -170,6 +203,9 @@ class user extends controller
 
       // validating username
       if(! $this->validateUsername() ) return false;
+
+      // validating full name
+      if(! $this->validateName() ) return false;
 
       // validating Email
       if (! $this->validateEmail()) return false;
@@ -195,6 +231,8 @@ class user extends controller
       {
         case userModel::SUCCESS_ADD_CODE :
           $this->messenger->addMessage("User has been added successfully.");
+          $this->profile->id = $this->model->getLastInsertedId();
+          $this->profile->add();
         break;
         case userModel::FAIL_ADD_CODE :
           $this->messenger->addMessage("Failed to add this user.", Messenger::ERROR_MESSAGE);
@@ -263,8 +301,15 @@ class user extends controller
   }
 
     public function edit(){
-      $this->pageTitle = "Edit User";
       $this->checkIdValidity();
+
+      // prevent the logged in user from modifying his data using url
+      $currentUserId = session::get('user')->id;
+      if ($this->model->id == $currentUserId)
+        helpers::reDirect('user');
+
+      $this->pageTitle = "Edit User";
+
       $this->fetchGroups();
       $this->data['storedUserInfo'] = $this->model->fetchRecord();
       if (isset($_POST['submit']))
@@ -291,6 +336,11 @@ class user extends controller
 
     public function delete(){
       $this->checkIdValidity();
+
+      // prevent the logged in user from removing himself
+      $currentUserId = session::get('user')->id;
+      if ($this->model->id == $currentUserId)
+        helpers::reDirect('user');
 
       if($this->model->deleteByPK())
         $this->messenger->addMessage( "User is Removed successfully.");
