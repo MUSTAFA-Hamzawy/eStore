@@ -11,7 +11,7 @@ class validation
       'num'   => '/^[0-9]+(?:\.[0-9]+)?$/',     // no -ve values
       'int'   => '/^[0-9]+$/',
       'float' => '/^[0-9]+\.[0-9]+$/',
-      'alphabet' => '/^[a-z\p{Arabic}]+$/iu',
+      'alphabet' => '/^[a-z\s\p{Arabic}]+$/iu',
       'alpha_numeric' => '/^[a-z0-9\p{Arabic}]+$/iu',
       'date' => '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/',
       'email' =>  '/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i',

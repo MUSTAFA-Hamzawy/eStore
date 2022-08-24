@@ -6,6 +6,7 @@ namespace MVC\controllers;
 
 use MVC\core\helpers;
 use MVC\core\Messenger;
+use MVC\core\validation;
 use MVC\models\privileges as privilegeModel;
 
 class privileges extends controller
@@ -34,8 +35,8 @@ class privileges extends controller
     $this->pageTitle = "Add Privilege";
 
     if (isset($_POST['submit'])) {
-      $this->model->Name = $this->sanitizeString($_POST['privilege']);
-      $this->model->url_title = $this->sanitizeString($_POST['link']);
+      $this->model->Name = validation::sanitizeString($_POST['privilege']);
+      $this->model->url_title = validation::sanitizeString($_POST['link']);
 
       if ($this->model->add())
         $this->messenger->addMessage("Privilege has been added successfully.");
