@@ -9,6 +9,7 @@ use MVC\models\user as UserModel;
 
 class authentication extends controller
 {
+
   public function __construct($db){
     parent::__construct($db);
 
@@ -57,4 +58,6 @@ class authentication extends controller
     }
 
   }
+
+
 }
