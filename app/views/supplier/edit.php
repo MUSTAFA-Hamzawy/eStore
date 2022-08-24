@@ -27,7 +27,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <a class="btn btn-info" href="<?= ROOT_LINK . 'user'?>">
+              <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller?>">
                 <i class="fas fa-home"></i>
               </a>
             </div>
@@ -38,71 +38,32 @@
             <form  method="POST" class="needs-validation col-lg-6 col-sm-8" novalidate>
               <div class="card-body">
                   <div class="form-group">
-                      <label for="fName">First Name</label>
-                      <input type="text" class="form-control" id="fName"
-                             placeholder="First Name" name="fName" required
+                      <label for="name">Supplier Name</label>
+                      <input type="text" class="form-control" id="name"
+                             name="name"
                              min="5" maxlength="25"
-                             value="<?= \MVC\core\helpers::showValue('fName') ?>"
+                             value="<?= \MVC\core\helpers::showValue('Name', $this->data['storedSupplier']) ?>"
                       >
                   </div>
                   <div class="form-group">
-                      <label for="lName">Last Name</label>
-                      <input type="text" class="form-control" id="lName"
-                             placeholder="Last Name" name="lName"
-                             min="5" maxlength="25"
-                             value="<?= \MVC\core\helpers::showValue('lName') ?>"
-                      >
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control"
+                             id="email" name="email" required
+                             value="<?= \MVC\core\helpers::showValue('Email', $this->data['storedSupplier']) ?>"
                   </div>
-                <div class="form-group">
-                  <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username"
-                         placeholder="ex: mustafa_123" name="username" required
-                        min="5" maxlength="25"
-                         value="<?= \MVC\core\helpers::showValue('username') ?>"
-                  >
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" class="form-control"
-                         placeholder="Type your email" id="email" name="email" required
-                         value="<?= \MVC\core\helpers::showValue('email') ?>">
-                </div>
-
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control"
-                         placeholder="Powerful Password" id="password" name="password" required
-                         value="<?= \MVC\core\helpers::showValue('password') ?>">
-                </div>
-
-                <div class="form-group">
-                  <label for="CPassword">Confirm Password</label>
-                  <input type="password" class="form-control"
-                         placeholder="Powerful Password" id="CPassword" name="CPassword" required
-                         value="<?= \MVC\core\helpers::showValue('CPassword') ?>">
-                </div>
-
                 <div class="form-group">
                   <label for="phone">Phone Number</label>
                   <input type="number" class="form-control"
                          placeholder="Phone Number" id="phone" name="phone"
-                         value="<?= \MVC\core\helpers::showValue('phone') ?>">
+                         value="<?= \MVC\core\helpers::showValue('PhoneNumber', $this->data['storedSupplier']) ?>">
                 </div>
-
-                <div class="form-group" data-select2-id="43">
-                  <label>Group</label>
-                  <select name="selectedGroup" class="form-control select2bs4 select2-hidden-accessible"
-                          style="width:
-                  100%;"
-                          data-select2-id="17" tabindex="-1" aria-hidden="true" required>
-                    <option class="selected"></option>
-                    <?php if (!empty($this->data['groups'])):
-                            foreach ($this->data['groups'] as $group):?>
-                    <option data-select2-id="<?= $group->id ?>" value="<?= $group->id; ?>"><?= $group->name ?></option>
-                    <?php endforeach; endif; ?>
-                  </select>
-
-                </div>
+                  <div class="form-group">
+                      <label for="address">Address</label>
+                      <input type="text" class="form-control" id="address"
+                             name="address" required
+                             value="<?= \MVC\core\helpers::showValue('address', $this->data['storedSupplier']) ?>"
+                      >
+                  </div>
 
               </div>
               <!-- /.card-body -->

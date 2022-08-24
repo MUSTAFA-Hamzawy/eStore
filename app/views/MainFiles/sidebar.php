@@ -103,6 +103,24 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="<?= ROOT_LINK . "supplier" ?>" class="nav-link">
+                        <i class="nav-icon fas fa-circle"></i>
+                        <p>
+                            Suppliers
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= ROOT_LINK . "client" ?>" class="nav-link">
+                        <i class="nav-icon fas fa-circle"></i>
+                        <p>
+                            Clients
+
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
