@@ -42,4 +42,21 @@ class groupPrivileges extends model
     $query = "SELECT `privillege_id` FROM `{$this->tableName}` where group_id = ?";
     return $this->db->rows($query, [$this->groupId]);
   }
+
+  public function getGroupAndPrivileges($groupId){
+    $query = "
+      SELECT privilleges.url_title from `users_groups` INNER JOIN `users_groups_privilleges` 
+      ON `users_groups`.`id` = users_groups_privilleges.group_id
+      INNER JOIN privilleges ON privilleges.id = users_groups_privilleges.privillege_id
+      WHERE users_groups.id = ?;
+      ";
+
+    $data = $this->db->rows($query, [$groupId]);
+    $extractedURLs = [];
+    foreach ($data as $item)
+      $extractedURLs[] = $item->url_title;
+
+    return $extractedURLs;
+
+  }
 }
