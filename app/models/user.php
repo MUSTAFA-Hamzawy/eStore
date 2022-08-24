@@ -2,6 +2,7 @@
 
 
 namespace MVC\models;
+use MVC\core\helpers;
 use MVC\core\session;
 use PDO;
 
@@ -51,15 +52,27 @@ class user extends model
     $password = md5($password);
     $query = "SELECT * FROM `user` where `username` = ? AND `password` = ?";
     $conditions = [$username, $password];
-    $data = $this->db->row($query, $conditions);
-    if ($data)
+    $data['user'] = $this->db->row($query, $conditions);
+    if ($data['user'])
     {
-      if ($data->status == 1){
+      $profileObject = new userProfile($this->db);
+      $profileObject->id = $data['user']->id;
+      $data['user_profile'] = $profileObject->fetchRecord();
+
+      $group = new group($this->db);
+      $group->id = $data['user']->group_id;
+      $data['group_name'] = $group->fetchRecord()->name;
+
+      $groupPrivileges = new groupPrivileges($this->db);
+      $groupId = $data['user']->group_id;
+      $data['group_privileges'] = $groupPrivileges->getGroupAndPrivileges($groupId);
+
+      if ($data['user']->status == 1){
         session::start();
-        session::set('user', $data);
+        session::set('user_data', $data);
         return self::SUCCESS_LOGIN;
       }
-      if ($data->status == 0)
+      if ($data['user']->status == 0)
         return self::DISABLED_USER;
     }
     return self::NOT_FOUND_USER;
@@ -113,8 +126,9 @@ class user extends model
   }
 
   public function getUserGroups(){
+    $currentUserId = session::get('user_data')['user']->id;
     $query = "SELECT `user`.`id`,`username`, `phone_number`,`email`, `last_login`,`join_date`,users_groups.name as groupName
-                from `user` INNER JOIN users_groups ON `user`.`group_id` = users_groups.id;";
+                from `user` INNER JOIN users_groups ON `user`.`group_id` = users_groups.id where `user`.`id` != {$currentUserId};";
     return $this->db->rows($query);
   }
 
