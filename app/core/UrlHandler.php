@@ -55,11 +55,28 @@ class UrlHandler
         {
           $controllerClass = $namespace . "authentication";
           $this->method = "login";
-          }
-        $controllerInstance = new $controllerClass($this->databaseObj);
+        }
+//        else{
+//          if ($this->controller == 'authentication' && $this->method == 'login')
+//            if (isset($_SERVER['HTTP_REFERER']))
+//                {
+//                  echo $_SERVER['HTTP_REFERER'];
+//                  header("Location: " . $_SERVER['HTTP_REFERER']);  //todo-me: not work
+//                }
+//        }
 
-        if (! method_exists($controllerInstance, $this->method))
-            $this->method = "main";
+      $controllerInstance = new $controllerClass($this->databaseObj);
+
+      if (! method_exists($controllerInstance, $this->method))
+        $this->method = "main";
+
+//        $route = $this->controller . '/' . $this->method;
+//        if (! $this->authenticationInstance->canAccessRoute($route))
+//          helpers::reDirect('accessDenied');
+
+
+
+
 
         $controllerInstance->setValues($this->controller, $this->method, $this->parameters);
         $controllerInstance->{$this->method}();     // call the method
