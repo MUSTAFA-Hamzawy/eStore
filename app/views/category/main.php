@@ -52,11 +52,11 @@
                       <td><?= $categoryInfo->Image?></td>
                       <td style="width:20%; text-align: center">
                         <a class="btn btn-info" href="<?= ROOT_LINK . $this->controller . "/edit/" .
-                        $categoryInfo->ClientId?>">
+                        $categoryInfo->CategoryId?>">
                           Edit  <i class="fas fa-edit"></i>
                         </a>
                         <a class="btn btn-danger"
-                           href="<?= ROOT_LINK . $this->controller . "/delete/" . $categoryInfo->ClientId?>"
+                           href="<?= ROOT_LINK . $this->controller . "/delete/" . $categoryInfo->CategoryId?>"
                            onclick="javascript:return confirm('Are You Confirm Deletion');">
                           Delete
                           <i class="fas fa-trash"></i>

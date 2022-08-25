@@ -95,7 +95,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="<?= ROOT_LINK . 'category' ?>" class="nav-link">
                         <i class="nav-icon fas fa-circle"></i>
                         <p>
                             Categories
