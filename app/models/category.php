@@ -26,6 +26,7 @@ class category extends model
 
   public function edit(){
     $data = array_combine($this->tableSchema, [$this->name, $this->image]);
+
     $condition = [$this->primaryKey => $this->id];
     return $this->db->update($this->tableName, $data, $condition);
   }

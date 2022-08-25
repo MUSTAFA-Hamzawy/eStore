@@ -35,35 +35,31 @@
 
             <?php require_once SHOW_USER_MESSAGES?>
 
-            <form  method="POST" class="needs-validation col-lg-6 col-sm-8" novalidate>
+            <form  method="POST" class="needs-validation col-lg-6 col-sm-8" novalidate enctype="multipart/form-data">
               <div class="card-body">
                 <div class="form-group">
-                  <label for="name">Client Name</label>
-                  <input type="text" class="form-control" id="name"
-                         name="name"
-                         min="5" maxlength="25"
-                         value="<?= \MVC\core\helpers::showValue('Name', $this->data['storedClient']) ?>"
+                  <label for="name">Category Name</label>
+                    <input type="text" class="form-control" id="name"
+                            name="name" required
+                           min="5" maxlength="25"
+                         value="<?= \MVC\core\helpers::showValue('Name', $this->data['storedCategory']) ?>"
                   >
                 </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" class="form-control"
-                         id="email" name="email" required
-                         value="<?= \MVC\core\helpers::showValue('Email', $this->data['storedClient']) ?>"
-                </div>
-                <div class="form-group">
-                  <label for="phone">Phone Number</label>
-                  <input type="number" class="form-control"
-                         placeholder="Phone Number" id="phone" name="phone"
-                         value="<?= \MVC\core\helpers::showValue('PhoneNumber', $this->data['storedClient']) ?>">
-                </div>
-                <div class="form-group">
-                  <label for="address">Address</label>
-                  <input type="text" class="form-control" id="address"
-                         name="address" required
-                         value="<?= \MVC\core\helpers::showValue('address', $this->data['storedClient']) ?>"
-                  >
-                </div>
+
+                  <div class="form-group">
+                      <label for="image">Image</label>
+                      <div class="input-group">
+                          <div class="custom-file">
+                              <input name="image" type="file" class="custom-file-input" id="image" accept="image/*">
+                              <label class="custom-file-label" for="image">Upload Image</label>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="col-12">
+                      <img src="<?= "../../uploads/images/" . \MVC\core\helpers::showValue('Image',
+                          $this->data['storedCategory'])  ?> " width="150px">
+                  </div>
 
               </div>
               <!-- /.card-body -->

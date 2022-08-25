@@ -4,6 +4,7 @@
 namespace MVC\controllers;
 
 
+use MVC\core\FileUpload;
 use MVC\core\helpers;
 use MVC\core\Messenger;
 use MVC\core\validation;
@@ -34,16 +35,16 @@ class category extends controller
     $result = true;
     if (empty($name))
     {
-      $this->messenger->addMessage("Client Name is required.", Messenger::ERROR_MESSAGE);
+      $this->messenger->addMessage("Category Name is required.", Messenger::ERROR_MESSAGE);
       $result = false;
     }
     if (! validation::isAlphabetical($name)) {
-      $this->messenger->addMessage("Client Name must be only alphabetical.", Messenger::ERROR_MESSAGE);
+      $this->messenger->addMessage("Category Name must be only alphabetical.", Messenger::ERROR_MESSAGE);
       $result = false;
     }
 
     if ($result)
-      $this->model->Name = $name;
+      $this->model->name = $name;
 
     return $result;
   }
@@ -53,35 +54,27 @@ class category extends controller
     // validating full name
     if(! $this->validateName() ) return false;
 
-    // validating Email
-    if (! $this->validateEmail()) return false;
-
-    // validating Phone Number
-    if (!$this->validatePhoneNumber()) return false;
-
-    // validating address
-    if (!$this->validateAddress()) return false;
+    if (isset($_FILES['image']))
+      $this->model->image = (new FileUpload($_FILES['image']))->upload();
+    else $this->model->image = null;
 
     return true;
   }
 
-  public function add(){
+  public function add(){      //todo-me: need to check the uniqueness of category
 
     $this->pageTitle = "Add Category";
 
     if (isset($_POST['submit'])) {
 
-      print_r($_FILES);die;
       if(! $this->validateData()){
         $this->view();
         return;
       }
-      if($this->model->add() == clientModel::EMAIL_EXIT_ERROR)
-        $this->messenger->addMessage("This email is already exist.", Messenger::ERROR_MESSAGE);
-      else if($this->model->add())
-        $this->messenger->addMessage("Client has been added successfully.");
+      if($this->model->add())
+        $this->messenger->addMessage("Category has been added successfully.");
       else
-        $this->messenger->addMessage("Failed to add this client.", Messenger::ERROR_MESSAGE);
+        $this->messenger->addMessage("Failed to add this category.", Messenger::ERROR_MESSAGE);
     }
 
     $this->view();
@@ -98,38 +91,32 @@ class category extends controller
       $this->redirectToHomePage();
   }
 
-  private function isSameOldData(){
-    return
-        $this->data['storedClient']->Name == $_POST['name'] &&
-        $this->data['storedClient']->PhoneNumber == $_POST['phone'] &&
-        $this->data['storedClient']->Email == $_POST['email'] &&
-        $this->data['storedClient']->address == $_POST['address'];
+  private function removeOldFile($filePath)
+  {
+    if (file_exists($filePath))
+      unlink($filePath);
   }
 
   public function edit(){
     $this->checkIdValidity();
-    $this->pageTitle = "Edit Client";
-    $this->data['storedClient'] = $this->model->fetchRecord();
+    $this->pageTitle = "Edit Category";
+    $this->data['storedCategory'] = $this->model->fetchRecord();
+    $oldImage = helpers::showValue('Image', $this->data['storedCategory']);
 
     if (isset($_POST['submit']))
     {
-      if ($this->isSameOldData()) {
-        $this->messenger->addMessage("No change happened.", Messenger::WARNING_MESSAGE);
-        $this->view();
-        return;
-      }
-
       if ($this->validateData())
       {
+        $this->removeOldFile(IMAGES_UPLOADS . DIRECTORY_SEPARATOR . $oldImage);
         if ($this->model->edit())
-          $this->messenger->addMessage("Client has been successfully modified.");
+          $this->messenger->addMessage("Category has been successfully modified.");
         else
           $this->messenger->addMessage("Failed.", Messenger::ERROR_MESSAGE);
       }else
         $this->messenger->addMessage("Failed.", Messenger::ERROR_MESSAGE);
     }
 
-    $this->data['storedClient'] = $this->model->fetchRecord();
+    $this->data['storedCategory'] = $this->model->fetchRecord();
     $this->view();
   }
 
@@ -137,9 +124,9 @@ class category extends controller
     $this->checkIdValidity();
 
     if($this->model->deleteByPK())
-      $this->messenger->addMessage( "Client is Removed successfully.");
+      $this->messenger->addMessage( "Category is Removed successfully.");
     else
-      $this->messenger->addMessage("Failed to remove this supplier.", Messenger::ERROR_MESSAGE);
+      $this->messenger->addMessage("Failed to remove this category.", Messenger::ERROR_MESSAGE);
 
     helpers::reDirectAfterTime($this->controller, 2);
     $this->main();
