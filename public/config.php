@@ -35,3 +35,9 @@ define('SESSION_MAX_LIFE_TIME', 0);
 define('SESSION_PATH', '/');
 define('SESSIONS_DIR', APP . DIRECTORY_SEPARATOR . "sessions");      // The path of sessions dir
 define('SESSIONS_CIPHER_METHOD', 'aes-128-ctr');
+
+// Uploads
+define("UPLOADS", PUBLIC_DIR . DIRECTORY_SEPARATOR . "uploads");
+define("IMAGES_UPLOADS", UPLOADS . DIRECTORY_SEPARATOR . "images");
+define("DOCS_UPLOADS", UPLOADS . DIRECTORY_SEPARATOR . "Docs");
+define("MAX_FILE_SIZE", ini_get('max_file_uploads'));
