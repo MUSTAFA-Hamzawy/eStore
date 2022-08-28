@@ -302,7 +302,7 @@ class user extends controller
       $this->checkIdValidity();
 
       // prevent the logged in user from modifying his data using url
-      $currentUserId = session::get('user')->id;
+      $currentUserId = session::get('user_data')['user']->id;
       if ($this->model->id == $currentUserId)
         helpers::reDirect('user');
 
@@ -335,7 +335,7 @@ class user extends controller
       $this->checkIdValidity();
 
       // prevent the logged in user from removing himself
-      $currentUserId = session::get('user')->id;
+      $currentUserId = session::get('user_data')['user']->id;
       if ($this->model->id == $currentUserId)
         helpers::reDirect('user');
 
