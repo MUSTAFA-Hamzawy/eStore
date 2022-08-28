@@ -6,7 +6,6 @@ namespace MVC\controllers;
 
 use MVC\core\helpers;
 use MVC\core\Messenger;
-use MVC\core\session;
 use MVC\core\validation;
 use MVC\models\supplier as supplierModel;
 

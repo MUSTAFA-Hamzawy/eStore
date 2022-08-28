@@ -6,7 +6,6 @@ namespace MVC\controllers;
 
 use MVC\core\helpers;
 use MVC\core\Messenger;
-use MVC\core\session;
 use MVC\core\validation;
 use MVC\models\client as clientModel;
 
@@ -133,7 +132,6 @@ class client extends controller
 
     $this->view();
   }
-
 
   // To avoid if anyone from playing in the URL
   private function checkIdValidity(){

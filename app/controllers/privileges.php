@@ -21,9 +21,6 @@ class privileges extends controller
 
   public function main()    // default method
   {
-//    if (empty($_SESSION))
-//      helpers::reDirect("admin");
-
     $this->pageTitle = 'Privileges';
     $this->method = "main";
     $this->data = $this->model->fetchModelRecords();
@@ -68,8 +65,8 @@ class privileges extends controller
   private function editPrivilege(){
     if (isset($_POST['submit'])) {
 
-      $this->model->Name = $this->sanitizeString($_POST['privilege']);
-      $this->model->url_title = $this->sanitizeString($_POST['link']);
+      $this->model->Name = validation::sanitizeString($_POST['privilege']);
+      $this->model->url_title = validation::sanitizeString($_POST['link']);
       if ($this->model->edit())
         $this->messenger->addMessage("Privilege is Updated successfully.");
       else

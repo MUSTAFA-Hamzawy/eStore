@@ -5,6 +5,7 @@ namespace MVC\controllers;
 
 use MVC\core\helpers;
 use MVC\core\Messenger;
+use MVC\core\validation;
 use MVC\models\group;
 use MVC\models\privileges as privilegesModel;
 use MVC\models\groupPrivileges;
@@ -26,9 +27,6 @@ class userGroups extends controller
 
   public function main()
   {
-//    if (empty($_SESSION))     //todo-me : think of another way
-//      helpers::reDirect("admin");
-
     $this->data['groups'] = $this->model->fetchModelRecords();
     $this->pageTitle = 'Groups';
     $this->method = "main";
@@ -39,7 +37,7 @@ class userGroups extends controller
    * @return integer : Id of the inserted group
    */
   private function addGroup(){
-    $this->model->Name = $this->sanitizeString($_POST['groupName']);
+    $this->model->Name = validation::sanitizeString($_POST['groupName']);
     $this->model->add();
     return $this->model->getLastInsertedId();
   }
@@ -132,7 +130,7 @@ class userGroups extends controller
   }
 
   private function editGroupName(){
-    $this->model->Name = $this->sanitizeString($_POST['groupName']);
+    $this->model->Name = validation::sanitizeString($_POST['groupName']);
 
     // check if the name was not modified --> which means the user modified anything else
     if ($this->model->Name !== $this->data['currentGroup']->name)
