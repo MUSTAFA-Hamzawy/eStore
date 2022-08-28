@@ -7,8 +7,12 @@ namespace MVC\core;
 class Authentication
 {
   private static $instance;
+
   private $allowedRoutes = [
-      'accessDenied/main'
+      'accessDenied/main',
+      'home/main',
+      'authentication/login',
+      'authentication/logout'
   ];
 
   private function __construct(){}
@@ -30,8 +34,11 @@ class Authentication
   }
 
   public function canAccessRoute($route){
-    print_r(session::get('user_data'));
+    if (in_array($route, $this->allowedRoutes))
+      return true;
+
     $privileges = session::get('user_data')['group_privileges'];
-    return in_array($route, $this->allowedRoutes) || in_array($route, $privileges);
+    return in_array($route, $privileges);
+
   }
 }

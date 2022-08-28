@@ -39,10 +39,6 @@ class Messenger
     }
   }
 
-  public function clearMessages(){
-//    unset(self::$messeges);
-  }
-
   public function getMesseges(){
     return self::$messeges;
   }

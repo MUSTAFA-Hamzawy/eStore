@@ -23,4 +23,15 @@ class helpers
 
         return '';
     }
+    public static function showUserImage(){
+      $defaultUserImage = "empty_user_image.png";
+
+      if (isset(session::get('user_data')['user_profile']->image))
+        $imageSrc =
+            GET_IMAGES_LINK . session::get('user_data')['user_profile']->image;
+      else
+        $imageSrc = GET_IMAGES_LINK  . $defaultUserImage;
+
+      return $imageSrc;
+    }
 }

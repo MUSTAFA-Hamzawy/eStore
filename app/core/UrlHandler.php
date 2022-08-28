@@ -11,9 +11,11 @@ class UrlHandler
     private $parameters;
     private $databaseObj;
     private $authenticationInstance;
+    private $ControllersNamespce;
 
     public function __construct($db){
-        $this->method = "main";
+        $this->method = "main";         // default
+        $this->ControllersNamespce = "MVC\controllers\\";
         $this->databaseObj = $db;
         $this->authenticationInstance = Authentication::getInstance();
         $this->analyzeUrl();
@@ -41,45 +43,48 @@ class UrlHandler
         }
     }
 
+    // to check whether the user already logged in or not.
+    private function checkAuthorization(){
+      if (! $this->authenticationInstance->isAuthorized())
+      {
+        $controllerClass = $this->ControllersNamespce . "authentication";
+        $this->method = "login";
+      }
+      else{
+        if ($this->controller == 'authentication' && $this->method == 'login')
+          if (isset($_SERVER['HTTP_REFERER']))
+          {
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+          }
+      }
+    }
+
+    private function checkRouteAccess(){
+      $route = $this->controller . '/' . $this->method;
+      if (! $this->authenticationInstance->canAccessRoute($route))
+        helpers::reDirect('accessDenied');
+    }
+
     private function render(){
-        $namespace = "MVC\controllers\\";
-        $controllerClass = $namespace . $this->controller;
+        $controllerClass = $this->ControllersNamespce . $this->controller;
 
         if (!class_exists($controllerClass))
         {
-            $controllerClass = $namespace . "home"; // default page
-            $this->method = "home";
+            $controllerClass = $this->ControllersNamespce . "home"; // default page
+            $this->method = "main";
         }
 
-        if (! $this->authenticationInstance->isAuthorized())
-        {
-          $controllerClass = $namespace . "authentication";
-          $this->method = "login";
-        }
-//        else{
-//          if ($this->controller == 'authentication' && $this->method == 'login')
-//            if (isset($_SERVER['HTTP_REFERER']))
-//                {
-//                  echo $_SERVER['HTTP_REFERER'];
-//                  header("Location: " . $_SERVER['HTTP_REFERER']);  //todo-me: not work
-//                }
-//        }
+      $this->checkAuthorization();
 
       $controllerInstance = new $controllerClass($this->databaseObj);
 
       if (! method_exists($controllerInstance, $this->method))
         $this->method = "main";
 
-//        $route = $this->controller . '/' . $this->method;
-//        if (! $this->authenticationInstance->canAccessRoute($route))
-//          helpers::reDirect('accessDenied');
+      $this->checkRouteAccess();
 
-
-
-
-
-        $controllerInstance->setValues($this->controller, $this->method, $this->parameters);
-        $controllerInstance->{$this->method}();     // call the method
+      $controllerInstance->setValues($this->controller, $this->method, $this->parameters);
+      $controllerInstance->{$this->method}();     // call the method
 
     }
 }

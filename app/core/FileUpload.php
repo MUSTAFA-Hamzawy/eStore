@@ -59,7 +59,7 @@ class FileUpload
         trigger_error("Files of type {$this->fileExtension} are not allowed.", E_USER_WARNING);
       }else if (!$this->isSizeAllowed()){
         trigger_error("File size exceeds the max allowed size.", E_USER_WARNING);
-      }else{
+      }else{    //todo-me: check if this folder has write permission or not ? is_writable built in func
           if ($this->isImage())
             move_uploaded_file($this->tmpPath, IMAGES_UPLOADS . DIRECTORY_SEPARATOR . $this->getFileFullName());
           else  // doc type
