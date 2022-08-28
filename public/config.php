@@ -41,3 +41,4 @@ define("UPLOADS", PUBLIC_DIR . DIRECTORY_SEPARATOR . "uploads");
 define("IMAGES_UPLOADS", UPLOADS . DIRECTORY_SEPARATOR . "images");
 define("DOCS_UPLOADS", UPLOADS . DIRECTORY_SEPARATOR . "Docs");
 define("MAX_FILE_SIZE", ini_get('max_file_uploads'));
+define("GET_IMAGES_LINK", "http://localhost/pages/eStore/public/uploads/images/");
