@@ -62,7 +62,11 @@ class UrlHandler
     private function checkRouteAccess(){
       $route = $this->controller . '/' . $this->method;
       if (! $this->authenticationInstance->canAccessRoute($route))
+      {
         helpers::reDirect('accessDenied');
+        die;
+      }
+
     }
 
     private function render(){
@@ -82,7 +86,6 @@ class UrlHandler
         $this->method = "main";
 
       $this->checkRouteAccess();
-
       $controllerInstance->setValues($this->controller, $this->method, $this->parameters);
       $controllerInstance->{$this->method}();     // call the method
 
