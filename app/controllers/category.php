@@ -55,13 +55,17 @@ class category extends controller
     if(! $this->validateName() ) return false;
 
     if (isset($_FILES['image']))
-      $this->model->image = (new FileUpload($_FILES['image']))->upload();
-    else $this->model->image = null;
+    {
+      $UploadedFileName = (new FileUpload($_FILES['image'], $this->messenger))->upload();
+      if ($UploadedFileName)
+        $this->model->image = $UploadedFileName;
+      else return false;
+    }
 
     return true;
   }
 
-  public function add(){      //todo-me: need to check the uniqueness of category
+  public function add(){
 
     $this->pageTitle = "Add Category";
 

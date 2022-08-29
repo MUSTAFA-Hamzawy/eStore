@@ -75,11 +75,12 @@ class product extends controller
     if(! $this->validateName() ) return false;
 
     // validating image
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == '0')
-      $this->model->image = (new FileUpload($_FILES['image']))->upload();
-    else{
-      $this->messenger->addMessage("Image is required", Messenger::ERROR_MESSAGE);
-      return false;
+    if (isset($_FILES['image']))
+    {
+      $UploadedFileName = (new FileUpload($_FILES['image'], $this->messenger))->upload();
+      if ($UploadedFileName)
+        $this->model->image = $UploadedFileName;
+      else return false;
     }
 
     //validate Price
@@ -103,7 +104,7 @@ class product extends controller
     return true;
   }
 
-  public function add(){      //todo-me: need to check the uniqueness of category
+  public function add(){
 
     $this->pageTitle = "Add Product";
     $this->data['categories'] = $this->categoryObject->fetchModelRecords();
